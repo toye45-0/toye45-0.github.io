@@ -3,104 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>toye不定期公式サイト | ブレインロット・フォートナイト企画・Discord Bot情報</title>
-
-  <meta name="description" content="YouTubeチャンネル『toye不定期』の公式サイト。最新ショート動画、ブレインロット企画、フォートナイト情報、Discord Bot解説など新しい視聴者に役立つ情報を発信しています。">
-  <meta name="robots" content="index, follow">
-
-  <meta property="og:title" content="toye不定期公式サイト">
-  <meta property="og:description" content="YouTubeチャンネル『toye不定期』の最新動画やブレインロット情報、Discord Botサポートをお届けします。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://adsteamnoeno1.br1.f5.si/">
-  <meta property="og:image" content="https://adsteamnoeno1.br1.f5.si/og-image.png">
-
+  <title>adsteam公式サイト | Discord Bot ソースコード提供</title>
+  <meta name="description" content="adsteam公式サイトです。Discord Bot のソースコードを登録者限定で提供中。10月・11月 入会受付中！">
   <style>
-    body { font-family:"Noto Sans JP", sans-serif; margin:0; background:#f8f9fa; color:#333; }
-    header { background:#2c3e50; color:#fff; padding:25px; text-align:center; }
-    header h1 { margin:0; font-size:2em; }
-    header p { margin:8px 0 0; font-size:1em; }
-    main { max-width:900px; margin:40px auto; padding:30px; background:#fff; border-radius:12px; box-shadow:0 4px 14px rgba(0,0,0,0.1); }
-    h2 { color:#c0392b; border-left:6px solid #c0392b; padding-left:10px; margin-bottom:15px; }
-    p { line-height:1.8; margin-bottom:20px; }
-    .btn { display:inline-block; padding:12px 22px; background:#e74c3c; color:#fff; border-radius:6px; text-decoration:none; }
-    .btn:hover { background:#c0392b; }
-    .video-frame { margin:20px 0; text-align:center; }
-    iframe { width:100%; max-width:560px; height:315px; border:none; border-radius:10px; }
-    footer { text-align:center; margin:30px 0; font-size:0.9em; color:#666; }
-
-    /* スクロール式バナー */
-    .scroll-banner {
-      width: 100%;
-      background: #ffdddd;
-      color: #a94442;
-      overflow: hidden;
-      white-space: nowrap;
-      box-sizing: border-box;
-      border-bottom: 2px solid #a94442;
-      padding: 8px 0;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+      color: #333;
+      line-height: 1.6;
+      text-align: center;
+    }
+    header {
+      background: #5865F2; /* Discordカラー */
+      color: white;
+      padding: 20px;
+      font-size: 1.5em;
       font-weight: bold;
     }
-    .scroll-banner span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll-text 15s linear infinite;
+    main {
+      padding: 20px;
     }
-    @keyframes scroll-text {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
+    .highlight {
+      background: #ffcc00;
+      color: #000;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      margin: 15px 0;
+      display: inline-block;
+      font-size: 1.3em;
+    }
+    a.button {
+      display: inline-block;
+      margin: 15px 10px;
+      padding: 12px 20px;
+      background: #5865F2;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+    a.button:hover {
+      background: #404EED;
+    }
+    footer {
+      margin-top: 30px;
+      padding: 10px;
+      background: #222;
+      color: #aaa;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
-  <!-- スクロール式バナー -->
-  <div class="scroll-banner">
-    <span>⚠️ 最近アンチコメントが多く乱れています。該当する視聴者は把握済みです。今後は適切な対応を行いますので、情報提供にご協力ください。</span>
-  </div>
-
   <header>
-    <h1>🎥 toye不定期</h1>
-    <p>YouTube公式サイト | 最新動画・ブレインロット・フォートナイト情報</p>
+    🤖 adsteam公式サイト
   </header>
 
   <main>
-    <section>
-      <h2>📢 チャンネルについて</h2>
-      <p>
-        「toye不定期」は、YouTubeで活動している公式チャンネルです。<br>
-        不定期に企画動画・解説・実験的なコンテンツを発信しています。<br>
-        このサイトでは <b>最新ショート動画</b> や <b>ブレインロット情報</b>、<b>フォートナイト企画</b>、<b>Discord Bot解説</b> をまとめています。<br>
-        新しい視聴者の方にも役立つ情報を随時更新中です。
-      </p>
-    </section>
+    <h2>Discord Bot ソースコード提供</h2>
+    <p>
+      adsteamでは、Discord Bot のソースコードを<br>
+      <b>YouTube登録者限定</b>で提供しています。
+    </p>
 
-    <section>
-      <h2>🎬 最新ショート動画</h2>
-      <div class="video-frame">
-        <iframe src="https://www.youtube.com/embed/bCK8TLoOOjI" allowfullscreen></iframe>
-      </div>
-      <p style="text-align:center;">
-        <a href="https://youtube.com/shorts/bCK8TLoOOjI?si=Gl2R4pVCziinuEFo" target="_blank" class="btn">YouTubeで見る</a>
-      </p>
-    </section>
+    <!-- 自動で受付表示が切り替わる部分 -->
+    <div id="notice" class="highlight"></div>
 
-    <section>
-      <h2>🤖 Discord Bot ソースコード提供</h2>
-      <p>
-        Discord Bot のソースコードに関するサポートを、<br>
-        YouTubeチャンネル登録者限定で行っています。<br><br>
-        興味のある方は、ぜひチャンネル登録のうえ <b>フリーチャット</b> にてコメントをお願いします。<br>
-        初心者の方でもわかりやすく解説いたします。
-      </p>
-    </section>
+    <h3>🔗 ご利用の流れ</h3>
+    <ol style="text-align: left; display: inline-block;">
+      <li>YouTube「toye不定期」をチャンネル登録</li>
+      <li>フリーチャットで「Botコード希望」とコメント</li>
+      <li>確認後、ソースコードを提供します</li>
+    </ol>
 
-    <section>
-      <h2>📝 企画採用リスト</h2>
-      <p>現在はまだ採用された企画はありません。決定次第こちらで公開いたします。</p>
-    </section>
+    <a class="button" href="https://www.youtube.com/@toye不定期?sub_confirmation=1" target="_blank">
+      📺 YouTube登録確認はこちら
+    </a>
+
+    <a class="button" href="https://discord.com/" target="_blank">
+      💬 Discordサーバーに参加
+    </a>
   </main>
 
   <footer>
-    <p>&copy; 2025 toye不定期 | 公式サイト</p>
+    &copy; 2025 adsteam | Discord Bot Source Code
   </footer>
+
+  <script>
+    // 今日の日付で受付中か終了かを切り替える
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1; // JSは0=1月なので+1
+
+    let message = "⚠️ 入会受付は終了しました";
+    if (year === 2025 && (month === 10 || month === 11)) {
+      message = "✨ 10月・11月 入会受付中！✨";
+    }
+    document.getElementById("notice").innerText = message;
+  </script>
 </body>
 </html>
