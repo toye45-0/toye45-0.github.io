@@ -27,9 +27,36 @@
     .video-frame { margin:20px 0; text-align:center; }
     iframe { width:100%; max-width:560px; height:315px; border:none; border-radius:10px; }
     footer { text-align:center; margin:30px 0; font-size:0.9em; color:#666; }
+
+    /* スクロール式バナー */
+    .scroll-banner {
+      width: 100%;
+      background: #ffdddd;
+      color: #a94442;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+      border-bottom: 2px solid #a94442;
+      padding: 8px 0;
+      font-weight: bold;
+    }
+    .scroll-banner span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-text 15s linear infinite;
+    }
+    @keyframes scroll-text {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
   </style>
 </head>
 <body>
+  <!-- スクロール式バナー -->
+  <div class="scroll-banner">
+    <span>⚠️ 最近アンチコメントが多く乱れています。該当する視聴者は把握済みです。今後は適切な対応を行いますので、情報提供にご協力ください。</span>
+  </div>
+
   <header>
     <h1>🎥 toye不定期</h1>
     <p>YouTube公式サイト</p>
