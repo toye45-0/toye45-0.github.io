@@ -50,7 +50,8 @@
     .scroll {
       display: inline-block;
       padding-left: 100%;
-      animation: scrollText 15s linear infinite;
+      /* スクロールをゆっくり（60秒で1周） */
+      animation: scrollText 60s linear infinite;
     }
     @keyframes scrollText {
       from { transform: translateX(100%); }
@@ -86,14 +87,13 @@ function speak(text) {
 }
 
 function startTrain() {
-  // 始発駅・種別・行き先をランダムに決定
   const start = randomPick(stations);
   const type = randomPick(trainTypes);
   const dest = randomPick(directions);
 
-  // 停車駅（始発〜行先までランダム数個選択）
+  // 停車駅をランダム生成
   let stops = [];
-  let numStops = Math.floor(Math.random() * 5) + 5; // 5〜10駅
+  let numStops = 12; // 12駅 → 約45分相当
   for (let i = 0; i < numStops; i++) {
     stops.push(randomPick(stations));
   }
@@ -108,15 +108,25 @@ function startTrain() {
     eventMsg = "途中駅で他の路線にお乗り換えいただけます。";
   }
 
-  // 表示内容
+  // LED表示
   const mainText = `${type} ${dest} 行き`;
   const detailText = `始発: ${start} ／ 停車駅: ${stops.join("・")} ${eventMsg}`;
+  document.getElementById("led").innerHTML = `<span class="scroll">${mainText}　${detailText}</span>`;
 
-  const led = document.getElementById("led");
-  led.innerHTML = `<span class="scroll">${mainText}　${detailText}</span>`;
-
-  // 読み上げ
+  // 運行開始アナウンス
   speak(`${start}始発、${type}${dest}行きです。${eventMsg || "ご乗車ありがとうございます。"}`);
+
+  // 次駅アナウンスを順番に流す（3秒 = 1分相当 → 45分電車くらいのペース）
+  stops.forEach((station, i) => {
+    setTimeout(() => {
+      speak(`次は、${station}です。`);
+    }, (i + 1) * 3000); // 3秒ごとに次駅
+  });
+
+  // 終点アナウンス
+  setTimeout(() => {
+    speak(`まもなく終点、${dest}です。ご利用ありがとうございました。`);
+  }, (stops.length + 1) * 3000);
 }
 </script>
 </body>
