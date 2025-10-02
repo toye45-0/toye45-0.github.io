@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>電車案内LEDシミュレーター</title>
+  <title>名鉄 運行シミュレーター</title>
   <style>
     body {
       margin: 0;
@@ -12,25 +12,19 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       height: 100vh;
+      overflow: hidden;
     }
     h1 {
       font-size: 1.5em;
-      margin-bottom: 15px;
+      margin: 10px;
       color: #0f0;
-    }
-    textarea {
-      width: 80%;
-      height: 100px;
-      margin-bottom: 20px;
-      font-size: 1.2em;
-      padding: 10px;
     }
     button {
       font-size: 1.2em;
-      padding: 10px 20px;
-      margin-bottom: 20px;
+      padding: 8px 20px;
+      margin: 10px;
       background: #222;
       color: #fff;
       border: 2px solid #555;
@@ -42,15 +36,16 @@
     }
     #led {
       background: black;
-      font-size: 5vw;
+      font-size: 4vw;
       letter-spacing: 0.2em;
-      padding: 20px;
-      border: 8px solid #222;
+      padding: 15px;
+      border: 6px solid #333;
       text-align: center;
       width: 90%;
+      height: 150px;
       white-space: nowrap;
       overflow: hidden;
-      box-shadow: 0 0 20px #0f0;
+      box-shadow: 0 0 15px #0f0;
     }
     .scroll {
       display: inline-block;
@@ -64,26 +59,64 @@
   </style>
 </head>
 <body>
-  <h1>🚋 電車案内LEDシミュレーター</h1>
+  <h1>🚋 名鉄 運行シミュレーター</h1>
 
-  <textarea id="inputText" placeholder="案内したい文章を入力してください（例：次は 名古屋 です）"></textarea>
-  <button onclick="runDisplay()">表示＆読み上げ</button>
-
+  <button onclick="startTrain()">▶ 運行開始</button>
   <div id="led"><span class="scroll">準備中...</span></div>
 
 <script>
-function runDisplay() {
-  const text = document.getElementById("inputText").value || "入力がありません";
+const stations = [
+  "豊橋","国府","東岡崎","新安城","知立","神宮前","金山","名鉄名古屋","栄生","須ヶ口","岩倉","犬山","新可児","御嵩"
+];
+
+const trainTypes = ["普通","急行","準急","特急"];
+const directions = ["岐阜","豊橋","新鵜沼","吉良吉田","犬山","内海"];
+
+function randomPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function speak(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "ja-JP";
+  utter.rate = 1;
+  utter.pitch = 1;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+}
+
+function startTrain() {
+  // 始発駅・種別・行き先をランダムに決定
+  const start = randomPick(stations);
+  const type = randomPick(trainTypes);
+  const dest = randomPick(directions);
+
+  // 停車駅（始発〜行先までをランダム数個選択）
+  let stops = [];
+  let numStops = Math.floor(Math.random() * 5) + 5; // 5〜10駅
+  for (let i = 0; i < numStops; i++) {
+    stops.push(randomPick(stations));
+  }
+
+  // イベント（通過待ち／乗換案内／人身事故）
+  let eventMsg = "";
+  if (Math.random() < 0.01) {
+    eventMsg = "ただいま人身事故が発生しました。運転を見合わせます。";
+  } else if (Math.random() < 0.3) {
+    eventMsg = "この電車は途中駅で通過待ちがあります。";
+  } else if (Math.random() < 0.3) {
+    eventMsg = "この電車は途中駅で他の路線にお乗り換えいただけます。";
+  }
+
+  // 表示内容
+  const mainText = `${type} ${dest} 行き`;
+  const detailText = `始発: ${start} ／ 停車駅: ${stops.join("・")} ${eventMsg}`;
+
   const led = document.getElementById("led");
-  led.innerHTML = `<span class="scroll">${text}</span>`;
+  led.innerHTML = `<span class="scroll">${mainText}　${detailText}</span>`;
 
   // 読み上げ
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "ja-JP";  // 日本語
-  utter.rate = 1;        // 速度（0.5 ～ 2）
-  utter.pitch = 1;       // 声の高さ
-  speechSynthesis.cancel(); // 前の読み上げを止める
-  speechSynthesis.speak(utter);
+  speak(`${start}始発、${type}${dest}行きです。${eventMsg || "ご乗車ありがとうございます。"}`);
 }
 </script>
 </body>
