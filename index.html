@@ -50,7 +50,7 @@
     .scroll {
       display: inline-block;
       padding-left: 100%;
-      animation: scrollText 12s linear infinite;
+      animation: scrollText 15s linear infinite;
     }
     @keyframes scrollText {
       from { transform: translateX(100%); }
@@ -66,9 +66,9 @@
 
 <script>
 const stations = [
-  "豊橋","国府","東岡崎","新安城","知立","神宮前","金山","名鉄名古屋","栄生","須ヶ口","岩倉","犬山","新可児","御嵩"
+  "豊橋","国府","東岡崎","新安城","知立","神宮前","金山",
+  "名鉄名古屋","栄生","須ヶ口","岩倉","犬山","新可児","御嵩"
 ];
-
 const trainTypes = ["普通","急行","準急","特急"];
 const directions = ["岐阜","豊橋","新鵜沼","吉良吉田","犬山","内海"];
 
@@ -91,21 +91,21 @@ function startTrain() {
   const type = randomPick(trainTypes);
   const dest = randomPick(directions);
 
-  // 停車駅（始発〜行先までをランダム数個選択）
+  // 停車駅（始発〜行先までランダム数個選択）
   let stops = [];
   let numStops = Math.floor(Math.random() * 5) + 5; // 5〜10駅
   for (let i = 0; i < numStops; i++) {
     stops.push(randomPick(stations));
   }
 
-  // イベント（通過待ち／乗換案内／人身事故）
+  // イベント
   let eventMsg = "";
   if (Math.random() < 0.01) {
     eventMsg = "ただいま人身事故が発生しました。運転を見合わせます。";
   } else if (Math.random() < 0.3) {
-    eventMsg = "この電車は途中駅で通過待ちがあります。";
+    eventMsg = "途中駅で通過待ちがあります。";
   } else if (Math.random() < 0.3) {
-    eventMsg = "この電車は途中駅で他の路線にお乗り換えいただけます。";
+    eventMsg = "途中駅で他の路線にお乗り換えいただけます。";
   }
 
   // 表示内容
