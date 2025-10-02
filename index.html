@@ -20,22 +20,35 @@
       background: #111;
       color: #fff;
       font-size: 2.5rem;
-      padding: 20px;
-      width: 800px;
-      height: 100px;
-      overflow: hidden;
-      white-space: nowrap;
+      width: 900px;
       border: 4px solid #333;
       border-radius: 10px;
       box-shadow: 0 0 15px #0f0;
+      text-align: center;
+      padding: 10px;
+    }
+
+    /* 上段（固定：種別と行き先） */
+    #fixedLine {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 下段（スクロール案内） */
+    #scrollArea {
       position: relative;
-      margin-bottom: 20px;
+      width: 100%;
+      height: 60px;
+      overflow: hidden;
+      background: #111;
     }
 
     #scrollText {
-      display: inline-block;
       position: absolute;
-      animation: scroll-left 15s linear infinite;
+      white-space: nowrap;
+      animation: scroll-left 25s linear infinite;
+      font-size: 1.8rem;
     }
 
     @keyframes scroll-left {
@@ -44,7 +57,7 @@
     }
 
     .btn {
-      margin: 10px;
+      margin: 20px;
       padding: 10px 20px;
       font-size: 1.2rem;
       border-radius: 8px;
@@ -58,51 +71,92 @@
 <body>
 
   <div id="led">
-    <div id="scrollText">準備中...</div>
+    <div id="fixedLine">普通 名鉄岐阜</div>
+    <div id="scrollArea">
+      <div id="scrollText">準備中...</div>
+    </div>
   </div>
 
   <button class="btn" onclick="generateTrain()">列車を生成</button>
 
   <script>
-    // 駅リスト（例：本線の一部、追加すれば全駅対応可）
+    // 駅リスト（名鉄本線の一部）
     const stations = [
       "豊橋","伊奈","小田渕","国府","御油","名電赤坂","名電長沢","本宿","名電山中","藤川",
       "美合","男川","東岡崎","岡崎公園前","矢作橋","宇頭","新安城","牛田","知立",
       "一ツ木","富士松","豊明","前後","中京競馬場前","有松","左京山","鳴海","本星崎","本笠寺",
       "桜","呼続","堀田","神宮前","金山","山王","名鉄名古屋","栄生","東枇杷島","西枇杷島",
       "二ツ杁","新川橋","須ヶ口","丸ノ内","新清洲","大里","奥田","国府宮","島氏永","妙興寺",
-      "名鉄一宮","石刀","今伊勢","西一宮","開明","奥町","玉ノ井",
-      "名鉄岐阜"
+      "名鉄一宮","石刀","今伊勢","西一宮","開明","奥町","玉ノ井","名鉄岐阜"
     ];
+
+    // 接続路線設定（架空＋実在混合）
+    const transfers = {
+      "新安城": "西尾線 吉良吉田方面",
+      "知立": "三河線 猿投方面",
+      "神宮前": "常滑線・河和線方面",
+      "金山": "JR中央本線・地下鉄名城線",
+      "名鉄名古屋": "近鉄名古屋線・地下鉄東山線"
+    };
 
     const types = ["普通", "準急", "急行", "特急"];
 
     function generateTrain() {
-      // 始発と行先をランダムに
-      const origin = stations[Math.floor(Math.random() * stations.length)];
-      let dest;
+      const originIndex = Math.floor(Math.random() * stations.length);
+      const origin = stations[originIndex];
+
+      let destIndex;
       do {
-        dest = stations[Math.floor(Math.random() * stations.length)];
-      } while (dest === origin);
+        destIndex = Math.floor(Math.random() * stations.length);
+      } while (destIndex === originIndex);
+
+      const [start, end] = originIndex < destIndex
+        ? [originIndex, destIndex]
+        : [destIndex, originIndex];
+
+      const routeStations = stations.slice(start, end + 1);
 
       const type = types[Math.floor(Math.random() * types.length)];
+      const dest = stations[destIndex];
 
-      // アナウンス文
-      const announce = `この電車は、${origin}始発、${type} ${dest}行きです。`;
+      // 固定表示
+      document.getElementById("fixedLine").textContent = `${type} ${dest}`;
 
-      // LED表示をスクロール
+      // 案内文
+      let info = `この電車は、${origin}始発、${type} ${dest}行きです。停車駅は、${routeStations.join("、")} です。`;
+
+      // ランダムで乗換案内
+      routeStations.forEach(st => {
+        if (transfers[st] && Math.random() < 0.3) {
+          info += ` ${st}では、${transfers[st]} にお乗り換えです。`;
+        }
+      });
+
+      // ランダムで通過待ち
+      if (Math.random() < 0.3) {
+        const waitStation = routeStations[Math.floor(routeStations.length / 2)];
+        const waitType = types[Math.floor(Math.random() * types.length)];
+        info += ` また、${waitStation}では${waitType}の通過待ちを行います。`;
+      }
+
+      // ランダムで人身事故イベント
+      if (Math.random() < 0.1) {
+        info += " なお、この電車は人身事故の影響で遅れて運転しています。";
+      }
+
+      // スクロール表示
       const scroll = document.getElementById("scrollText");
-      scroll.textContent = `${type} ${dest}行き　${announce}`;
+      scroll.textContent = info;
       scroll.style.animation = "none";
-      void scroll.offsetWidth; // リセット
+      void scroll.offsetWidth;
       scroll.style.animation = null;
 
-      // Google翻訳TTSで読み上げ
-      playAnnouncement(announce);
+      // 音声アナウンス
+      playAnnouncement(info);
     }
 
     function playAnnouncement(text) {
-      const url = "https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=" 
+      const url = "https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q="
         + encodeURIComponent(text);
       const audio = new Audio(url);
       audio.play();
