@@ -24,14 +24,13 @@
 const canvas = document.getElementById("led");
 const ctx = canvas.getContext("2d");
 
-// ドットマトリクス設定（文字を大きくするため密度調整）
-const dotSize = 10;   // ドット直径
-const gap = 3;        // ドット間隔
-const cols = 150;     // 横ドット数
-const rows = 40;      // 縦ドット数
+const dotSize = 10;   // ドットの直径
+const gap = 3;        // ドットの間隔
+const cols = 150;
+const rows = 40;
 
-// LED風テキスト描画
-function drawLEDText(text, offsetX=0, offsetY=0, fontSize=120) {
+// LED風に文字を描画する関数
+function drawLEDText(text, offsetX=0, offsetY=0, fontSize=120, color="white") {
   let offCanvas = document.createElement("canvas");
   offCanvas.width = canvas.width;
   offCanvas.height = canvas.height;
@@ -40,7 +39,7 @@ function drawLEDText(text, offsetX=0, offsetY=0, fontSize=120) {
   offCtx.fillStyle = "black";
   offCtx.fillRect(0,0,offCanvas.width,offCanvas.height);
   offCtx.font = `bold ${fontSize}px 'MS Gothic'`;
-  offCtx.fillStyle = "white";
+  offCtx.fillStyle = color;
   offCtx.textAlign = "left";
   offCtx.textBaseline = "middle";
   offCtx.fillText(text, offsetX, offsetY);
@@ -56,25 +55,28 @@ function drawLEDText(text, offsetX=0, offsetY=0, fontSize=120) {
 
       ctx.beginPath();
       ctx.arc(px, py, dotSize/2, 0, Math.PI*2);
-      ctx.fillStyle = bright > 128 ? "white" : "#111";
+      ctx.fillStyle = bright > 128 ? color : "#111";
       ctx.fill();
     }
   }
 }
 
-// 全体表示（種別＋行き先）
-function drawDisplay(type, dest) {
+// 全体表示
+function drawDisplay(type, dest, destEng) {
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // 左：種別
-  drawLEDText(type, 80, 180, 150);
+  // 左に種別（白固定）
+  drawLEDText(type, 60, 180, 160, "white");
 
-  // 右：行き先
-  drawLEDText(dest, 600, 180, 180);
+  // 右に行き先（大きく）
+  drawLEDText(dest, 550, 160, 180, "white");
+
+  // 英語小さく（右下）
+  drawLEDText(destEng, 600, 270, 40, "white");
 }
 
 // テスト表示
-drawDisplay("普通", "大須");
+drawDisplay("普通", "大須", "Osu");
 </script>
 </body>
 </html>
