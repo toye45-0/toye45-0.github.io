@@ -49,57 +49,64 @@
   <div class="display">
     <div class="main" id="mainText">準急 吉良吉田 行き</div>
     <div class="scroll-area">
-      <span class="scroll-text" id="scrollText">
-        停車駅: 新安城・知立・神宮前・金山・名古屋
-      </span>
+      <span class="scroll-text" id="scrollText">停車駅: 新安城・知立・神宮前・名古屋</span>
     </div>
   </div>
+
+  <audio id="player"></audio>
 
   <script>
     const stations = ["新安城","知立","東岡崎","国府","豊橋","鳴海","神宮前","金山","名鉄名古屋","岩倉","犬山","岐阜","吉良吉田"];
     const types = ["普通","急行","準急","特急","快速特急"];
     const destinations = ["豊橋","岐阜","吉良吉田","犬山","名鉄名古屋"];
 
+    // ランダム取得
     function randomPick(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    // アナウンス関数
+    // 音声読み上げ（speechSynthesis版）
     function speak(text) {
       let utter = new SpeechSynthesisUtterance(text);
       utter.lang = "ja-JP";
-      utter.rate = 0.9;   // ゆっくり
-      utter.pitch = 0.8;  // 少し低め
+      utter.rate = 0.9;
+      utter.pitch = 0.8;
       speechSynthesis.speak(utter);
     }
 
     function startTrain() {
-      // 列車設定
+      // 種別・行き先
       let type = randomPick(types);
       let dest = randomPick(destinations);
-      let mainText = `${type} ${dest} 行き`;
-      document.getElementById("mainText").innerText = mainText;
+      document.getElementById("mainText").innerText = `${type} ${dest} 行き`;
 
-      // 停車駅設定
+      // 経路作成
       let route = [];
-      for (let i=0; i<8; i++) route.push(randomPick(stations));
-      let scrollText = `停車駅: ${route.join("・")}`;
-      document.getElementById("scrollText").innerText = scrollText;
+      for (let i=0; i<10; i++) route.push(randomPick(stations));
+      document.getElementById("scrollText").innerText = "停車駅: " + route.join("・");
 
       // 出発アナウンス
       speak(`まもなく、${type} ${dest}行きが発車します。`);
 
-      // 各駅アナウンス（15秒ごと → 体感5分）
-      const interval = 15000;
-      route.forEach((st, i) => {
+      const interval = 15000; // 15秒 = 体感5分
+
+      route.forEach((station, i) => {
         setTimeout(() => {
-          speak(`次は、${st}です。`);
+          // 次駅アナウンス
+          speak(`次は、${station}です。`);
+
+          // ランダムで通過待ち or 乗換案内
+          if (Math.random() < 0.2) {
+            speak(`${station}駅で、特急の通過待ちを行います。`);
+          } else if (Math.random() < 0.2) {
+            speak(`${station}駅で、地下鉄${randomPick(["東山線","鶴舞線","名城線"])}にお乗り換えです。`);
+          }
         }, (i+1)*interval);
       });
 
       // 終点アナウンス
       setTimeout(() => {
-        speak(`終点、${dest}です。ご利用ありがとうございました。`);
+        speak(`まもなく、終点 ${dest}です。ご利用ありがとうございました。`);
       }, (route.length+1)*interval);
     }
 
