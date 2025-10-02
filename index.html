@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>LED行先表示</title>
+<title>LED行先表示シミュレーター</title>
 <style>
   body {
     margin: 0;
@@ -24,47 +24,59 @@
 const canvas = document.getElementById("led");
 const ctx = canvas.getContext("2d");
 
-// ドットマトリクスの設定
+// ドットマトリクス設定
 const dotSize = 8;   // ドット直径
 const gap = 2;       // ドット間隔
-const cols = 100;    // 横のドット数
-const rows = 30;     // 縦のドット数
+const cols = 110;    // 横ドット数
+const rows = 30;     // 縦ドット数
 
-// テキストを描画する関数
-function drawLEDText(text) {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = "black";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+// テキストをLED風に描画する関数
+function drawLEDText(text, offsetX=0, offsetY=0, fontSize=60) {
+  // 一度オフスクリーンに描画してからサンプリング
+  let offCanvas = document.createElement("canvas");
+  offCanvas.width = canvas.width;
+  offCanvas.height = canvas.height;
+  let offCtx = offCanvas.getContext("2d");
 
-  ctx.font = "bold 60px 'MS Gothic'";
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, canvas.width/2, canvas.height/2);
+  offCtx.fillStyle = "black";
+  offCtx.fillRect(0,0,offCanvas.width,offCanvas.height);
+  offCtx.font = `bold ${fontSize}px 'MS Gothic'`;
+  offCtx.fillStyle = "white";
+  offCtx.textAlign = "left";
+  offCtx.textBaseline = "middle";
+  offCtx.fillText(text, offsetX, offsetY);
 
-  // ドット化処理
-  let imageData = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  let imageData = offCtx.getImageData(0,0,canvas.width,canvas.height).data;
 
+  // メインキャンバスにドット化して描画
   for (let y=0; y<rows; y++) {
     for (let x=0; x<cols; x++) {
       let px = x * (dotSize+gap);
       let py = y * (dotSize+gap);
-
-      // ピクセルのサンプル位置
       let idx = ((py*canvas.width)+px)*4;
-      let bright = imageData[idx]; // 白文字の明るさを取得
+      let bright = imageData[idx]; // R値
 
       ctx.beginPath();
       ctx.arc(px, py, dotSize/2, 0, Math.PI*2);
-      ctx.fillStyle = bright > 128 ? "white" : "#222"; // 点灯 or 消灯
+      ctx.fillStyle = bright > 128 ? "white" : "#111"; // 点灯 or 消灯
       ctx.fill();
     }
   }
 }
 
-// 行先テスト
-drawLEDText("普通 大須");
+// 全体を描画する関数（種別＋行き先）
+function drawDisplay(type, dest) {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // 左側：種別（例: 普通, 急行, 準急, 特急）
+  drawLEDText(type, 50, 130, 80);
+
+  // 右側：行き先（例: 大須, 豊橋, 岐阜）
+  drawLEDText(dest, 400, 130, 100);
+}
+
+// テスト表示
+drawDisplay("普通", "大須");
 </script>
 </body>
 </html>
