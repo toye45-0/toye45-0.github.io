@@ -18,21 +18,20 @@
 </style>
 </head>
 <body>
-<canvas id="led" width="900" height="250"></canvas>
+<canvas id="led" width="1200" height="350"></canvas>
 
 <script>
 const canvas = document.getElementById("led");
 const ctx = canvas.getContext("2d");
 
-// ドットマトリクス設定
-const dotSize = 8;   // ドット直径
-const gap = 2;       // ドット間隔
-const cols = 110;    // 横ドット数
-const rows = 30;     // 縦ドット数
+// ドットマトリクス設定（文字を大きくするため密度調整）
+const dotSize = 10;   // ドット直径
+const gap = 3;        // ドット間隔
+const cols = 150;     // 横ドット数
+const rows = 40;      // 縦ドット数
 
-// テキストをLED風に描画する関数
-function drawLEDText(text, offsetX=0, offsetY=0, fontSize=60) {
-  // 一度オフスクリーンに描画してからサンプリング
+// LED風テキスト描画
+function drawLEDText(text, offsetX=0, offsetY=0, fontSize=120) {
   let offCanvas = document.createElement("canvas");
   offCanvas.width = canvas.width;
   offCanvas.height = canvas.height;
@@ -48,31 +47,30 @@ function drawLEDText(text, offsetX=0, offsetY=0, fontSize=60) {
 
   let imageData = offCtx.getImageData(0,0,canvas.width,canvas.height).data;
 
-  // メインキャンバスにドット化して描画
   for (let y=0; y<rows; y++) {
     for (let x=0; x<cols; x++) {
       let px = x * (dotSize+gap);
       let py = y * (dotSize+gap);
       let idx = ((py*canvas.width)+px)*4;
-      let bright = imageData[idx]; // R値
+      let bright = imageData[idx];
 
       ctx.beginPath();
       ctx.arc(px, py, dotSize/2, 0, Math.PI*2);
-      ctx.fillStyle = bright > 128 ? "white" : "#111"; // 点灯 or 消灯
+      ctx.fillStyle = bright > 128 ? "white" : "#111";
       ctx.fill();
     }
   }
 }
 
-// 全体を描画する関数（種別＋行き先）
+// 全体表示（種別＋行き先）
 function drawDisplay(type, dest) {
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // 左側：種別（例: 普通, 急行, 準急, 特急）
-  drawLEDText(type, 50, 130, 80);
+  // 左：種別
+  drawLEDText(type, 80, 180, 150);
 
-  // 右側：行き先（例: 大須, 豊橋, 岐阜）
-  drawLEDText(dest, 400, 130, 100);
+  // 右：行き先
+  drawLEDText(dest, 600, 180, 180);
 }
 
 // テスト表示
