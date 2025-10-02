@@ -53,19 +53,17 @@
     </div>
   </div>
 
-  <audio id="player"></audio>
-
   <script>
     const stations = ["新安城","知立","東岡崎","国府","豊橋","鳴海","神宮前","金山","名鉄名古屋","岩倉","犬山","岐阜","吉良吉田"];
     const types = ["普通","急行","準急","特急","快速特急"];
     const destinations = ["豊橋","岐阜","吉良吉田","犬山","名鉄名古屋"];
 
-    // ランダム取得
+    // ランダム選択
     function randomPick(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    // 音声読み上げ（speechSynthesis版）
+    // 音声読み上げ
     function speak(text) {
       let utter = new SpeechSynthesisUtterance(text);
       utter.lang = "ja-JP";
@@ -80,7 +78,7 @@
       let dest = randomPick(destinations);
       document.getElementById("mainText").innerText = `${type} ${dest} 行き`;
 
-      // 経路作成
+      // 経路（10駅ランダム）
       let route = [];
       for (let i=0; i<10; i++) route.push(randomPick(stations));
       document.getElementById("scrollText").innerText = "停車駅: " + route.join("・");
@@ -92,15 +90,14 @@
 
       route.forEach((station, i) => {
         setTimeout(() => {
-          // 次駅アナウンス
+          // 次駅
           speak(`次は、${station}です。`);
 
-          // ランダムで通過待ち or 乗換案内
-          if (Math.random() < 0.2) {
-            speak(`${station}駅で、特急の通過待ちを行います。`);
-          } else if (Math.random() < 0.2) {
-            speak(`${station}駅で、地下鉄${randomPick(["東山線","鶴舞線","名城線"])}にお乗り換えです。`);
-          }
+          // 通過待ち（必ず）
+          speak(`${station}駅で、特急の通過待ちを行います。`);
+
+          // 乗換案内（必ず）
+          speak(`${station}駅で、地下鉄${randomPick(["東山線","鶴舞線","名城線"])}にお乗り換えです。`);
         }, (i+1)*interval);
       });
 
