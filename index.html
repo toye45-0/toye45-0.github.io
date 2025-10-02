@@ -20,16 +20,16 @@
       align-items: center;
     }
     .main {
-      font-size: 5vw;
+      font-size: 6vw;
       font-weight: bold;
-      margin-bottom: 2vh;
-      text-shadow: 0 0 8px #ff8000;
+      margin-bottom: 3vh;
+      text-shadow: 0 0 12px #ff8000;
     }
     .scroll-area {
       font-size: 3vw;
       white-space: nowrap;
       overflow: hidden;
-      width: 90%;
+      width: 95%;
       border-top: 2px solid orange;
       border-bottom: 2px solid orange;
       padding: 10px 0;
@@ -64,21 +64,22 @@
     }
 
     // 音声読み上げ
-    function speak(text) {
+    function speak(text, lang="ja-JP") {
       let utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "ja-JP";
-      utter.rate = 0.9;
-      utter.pitch = 0.8;
+      utter.lang = lang;
+      utter.rate = 0.95;
+      utter.pitch = 0.9;
       speechSynthesis.speak(utter);
     }
 
     function startTrain() {
-      // 種別・行き先
       let type = randomPick(types);
       let dest = randomPick(destinations);
+
+      // 表示更新
       document.getElementById("mainText").innerText = `${type} ${dest} 行き`;
 
-      // 経路（10駅ランダム）
+      // 経路
       let route = [];
       for (let i=0; i<10; i++) route.push(randomPick(stations));
       document.getElementById("scrollText").innerText = "停車駅: " + route.join("・");
@@ -86,22 +87,24 @@
       // 出発アナウンス
       speak(`まもなく、${type} ${dest}行きが発車します。`);
 
-      const interval = 15000; // 15秒 = 体感5分
+      const interval = 20000; // 20秒ごと（体感5分間隔）
 
       route.forEach((station, i) => {
         setTimeout(() => {
-          // 次駅
+          // 停車案内
           speak(`次は、${station}です。`);
-
-          // 通過待ち（必ず）
+          // 通過待ち案内
           speak(`${station}駅で、特急の通過待ちを行います。`);
-
-          // 乗換案内（必ず）
+          // 乗換案内
           speak(`${station}駅で、地下鉄${randomPick(["東山線","鶴舞線","名城線"])}にお乗り換えです。`);
+
+          // 英語案内（追加したい場合）
+          // speak(`Next stop is ${station}. Please change here for the subway.`, "en-US");
+
         }, (i+1)*interval);
       });
 
-      // 終点アナウンス
+      // 終点
       setTimeout(() => {
         speak(`まもなく、終点 ${dest}です。ご利用ありがとうございました。`);
       }, (route.length+1)*interval);
