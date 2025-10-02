@@ -3,23 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>名鉄 運行シミュレーター</title>
+  <title>名鉄 LED 行先シミュレーター</title>
   <style>
     body {
-      font-family: "Yu Gothic UI", sans-serif;
-      background: #f5f5f5;
-      text-align: center;
-      padding: 20px;
-    }
-    #board {
-      background: #222;
+      background: #000;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      width: 80%;
-      margin: auto;
-      font-size: 1.4rem;
     }
+
+    #led {
+      background: #111;
+      color: #fff;
+      font-size: 2.5rem;
+      padding: 20px;
+      width: 800px;
+      height: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      border: 4px solid #333;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #0f0;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    #scrollText {
+      display: inline-block;
+      position: absolute;
+      animation: scroll-left 15s linear infinite;
+    }
+
+    @keyframes scroll-left {
+      0%   { left: 100%; }
+      100% { left: -100%; }
+    }
+
     .btn {
       margin: 10px;
       padding: 10px 20px;
@@ -34,20 +57,14 @@
 </head>
 <body>
 
-  <h1>名鉄運行情報・行先シミュレーター</h1>
-
-  <div id="board">
-    <p id="origin">始発: -</p>
-    <p id="dest">行先: -</p>
-    <p id="type">種別: -</p>
-    <p id="stations">停車駅: -</p>
-    <p id="announce">アナウンス: -</p>
+  <div id="led">
+    <div id="scrollText">準備中...</div>
   </div>
 
   <button class="btn" onclick="generateTrain()">列車を生成</button>
 
-  <!-- 駅データ(JSONを直接埋め込み) -->
   <script>
+    // 駅リスト（例：本線の一部、追加すれば全駅対応可）
     const stations = [
       "豊橋","伊奈","小田渕","国府","御油","名電赤坂","名電長沢","本宿","名電山中","藤川",
       "美合","男川","東岡崎","岡崎公園前","矢作橋","宇頭","新安城","牛田","知立",
@@ -55,20 +72,12 @@
       "桜","呼続","堀田","神宮前","金山","山王","名鉄名古屋","栄生","東枇杷島","西枇杷島",
       "二ツ杁","新川橋","須ヶ口","丸ノ内","新清洲","大里","奥田","国府宮","島氏永","妙興寺",
       "名鉄一宮","石刀","今伊勢","西一宮","開明","奥町","玉ノ井",
-      // …ここにさらに全駅を追加していけます
       "名鉄岐阜"
     ];
-  </script>
 
-  <script>
     const types = ["普通", "準急", "急行", "特急"];
 
     function generateTrain() {
-      if (stations.length === 0) {
-        alert("駅データがありません。");
-        return;
-      }
-
       // 始発と行先をランダムに
       const origin = stations[Math.floor(Math.random() * stations.length)];
       let dest;
@@ -78,18 +87,15 @@
 
       const type = types[Math.floor(Math.random() * types.length)];
 
-      // 停車駅（今は簡易で始発と終点だけ）
-      const stops = [origin, "…", dest];
-
-      // 画面表示
-      document.getElementById("origin").textContent = "始発: " + origin;
-      document.getElementById("dest").textContent = "行先: " + dest;
-      document.getElementById("type").textContent = "種別: " + type;
-      document.getElementById("stations").textContent = "停車駅: " + stops.join(" → ");
-
       // アナウンス文
       const announce = `この電車は、${origin}始発、${type} ${dest}行きです。`;
-      document.getElementById("announce").textContent = announce;
+
+      // LED表示をスクロール
+      const scroll = document.getElementById("scrollText");
+      scroll.textContent = `${type} ${dest}行き　${announce}`;
+      scroll.style.animation = "none";
+      void scroll.offsetWidth; // リセット
+      scroll.style.animation = null;
 
       // Google翻訳TTSで読み上げ
       playAnnouncement(announce);
@@ -105,4 +111,3 @@
 
 </body>
 </html>
-
