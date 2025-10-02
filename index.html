@@ -11,7 +11,6 @@
       font-family: 'MS Gothic', monospace;
       overflow: hidden;
     }
-    /* 画面全体を電光掲示板風に */
     .container {
       width: 100vw;
       height: 100vh;
@@ -76,21 +75,42 @@
       let type = randomPick(types);
       let dest = randomPick(destinations);
 
-      // 表示更新
       document.getElementById("mainText").innerText = `${type} ${dest} 行き`;
 
-      // 経路
       let route = [];
-      for (let i=0; i<10; i++) route.push(randomPick(stations));
+      for (let i=0; i<8; i++) route.push(randomPick(stations));
       document.getElementById("scrollText").innerText = "停車駅: " + route.join("・");
 
       // 出発アナウンス
       speak(`まもなく、${type} ${dest}行きが発車します。`);
 
-      const interval = 20000; // 20秒ごと（体感5分間隔）
+      const interval = 20000;
 
       route.forEach((station, i) => {
         setTimeout(() => {
+          let messages = [];
+
+          // 日本語アナウンス
+          messages.push(`次は、${station}です。`);
+          messages.push(`${station}駅で、特急の通過待ちを行います。`);
+          messages.push(`${station}駅で、地下鉄${randomPick(["東山線","鶴舞線","名城線"])}にお乗り換えです。`);
+
+          // 英語 30%
+          if (Math.random() < 0.3) {
+            messages.push(`Next stop is ${station}. Please change here for the subway.`);
+            speak(`Next stop is ${station}. Please change here for the subway.`, "en-US");
+          }
+
+          // 韓国語 10%
+          if (Math.random() < 0.1) {
+            messages.push(`${station}역입니다. 지하철로 환승하실 수 있습니다.`);
+            speak(`${station}역입니다. 지하철로 환승하실 수 있습니다.`, "ko-KR");
+          }
+
+          // スクロール表示更新（多言語も流す）
+          document.getElementById("scrollText").innerText = messages.join(" ／ ");
+
+          // 日本語必須読み上げ
           speak(`次は、${station}です。`);
           speak(`${station}駅で、特急の通過待ちを行います。`);
           speak(`${station}駅で、地下鉄${randomPick(["東山線","鶴舞線","名城線"])}にお乗り換えです。`);
