@@ -3,117 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>adsteam公式｜Discord Bot提供</title>
-  <meta name="description" content="adsteam公式サイトです。Discord Bot のソースコードを YouTube登録者限定で提供中。10月・11月 入会受付中！">
+  <title>現在メンテナンス中 | adsteam公式</title>
+  <meta name="description" content="adsteam公式サイトは現在メンテナンス中です。再開時期は現在調整中です。活動内容の一部変更に伴い、Google検索で一時的に表示されない可能性があります。">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+      font-family: "Noto Sans JP", sans-serif;
       background: #f4f6f9;
-      color: #333;
-      line-height: 1.6;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
+      color: #333;
     }
-    header {
-      background: #5865F2; /* Discordカラー */
-      color: white;
-      padding: 20px;
-      font-size: 1.6em;
-      font-weight: bold;
+    .container {
+      background: #fff;
+      padding: 40px 60px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      max-width: 520px;
     }
-    main {
-      padding: 20px;
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      color: #5865f2;
     }
-    .highlight {
-      background: #ffcc00;
-      color: #000;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-weight: bold;
-      margin: 15px 0;
-      display: inline-block;
-      font-size: 1.2em;
+    p {
+      font-size: 1rem;
+      margin-bottom: 12px;
+      line-height: 1.6;
     }
     .notice {
-      color: red;
-      font-weight: bold;
-      margin: 15px 0;
-    }
-    a.button {
-      display: inline-block;
-      margin: 15px 10px;
-      padding: 12px 20px;
-      background: #5865F2;
-      color: white;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
-    a.button:hover {
-      background: #404EED;
-    }
-    footer {
-      margin-top: 30px;
-      padding: 10px;
-      background: #222;
-      color: #aaa;
-      font-size: 0.9em;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 18px;
     }
   </style>
 </head>
 <body>
-  <header>
-    🤖 adsteam公式｜Discord Bot提供
-  </header>
-
-  <main>
-    <h2>Discord Bot ソースコード提供</h2>
-    <p>
-      adsteamでは、Discord Bot のソースコードを<br>
-      <b>YouTube登録者限定</b>で提供しています。
-    </p>
-
-    <p class="notice">
-      ※フリーチャット題名配信は開始されません。<br>
-      コメントで「Botコード希望」と書いてください。
-    </p>
-
-    <!-- 自動で受付表示が切り替わる部分 -->
-    <div id="notice" class="highlight"></div>
-
-    <h3>🔗 ご利用の流れ</h3>
-    <ol style="text-align: left; display: inline-block;">
-      <li>YouTube「toye不定期」をチャンネル登録</li>
-      <li>フリーチャットやコメントで「Botコード希望」と書く</li>
-      <li>確認後、Discordにてソースコードを提供します</li>
-    </ol>
-
-    <a class="button" href="https://www.youtube.com/@toye不定期?sub_confirmation=1" target="_blank">
-      📺 YouTube登録確認はこちら
-    </a>
-
-    <a class="button" href="https://discord.com/" target="_blank">
-      💬 Discordサーバーに参加
-    </a>
-  </main>
-
-  <footer>
-    &copy; 2025 adsteam | Discord Bot Source Code
-  </footer>
-
-  <script>
-    // 今日の日付で受付中か終了かを切り替える
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; // JSは0=1月なので+1
-
-    let message = "⚠️ 入会受付は終了しました";
-    if (year === 2025 && (month === 10 || month === 11)) {
-      message = "✨ 10月・11月 入会受付中！✨";
-    }
-    document.getElementById("notice").innerText = message;
-  </script>
+  <div class="container">
+    <h1>🔧 現在メンテナンス中です</h1>
+    <p>ただいまシステムの大型メンテナンスを実施しています。</p>
+    <p>再開見込み：<span class="date">調整中</span></p>
+    <p>ご不便をおかけしますが、再開までお待ちください。</p>
+    <div class="notice">
+      <p>※ 活動内容を一部変更予定です。</p>
+      <p>※ Google検索では一時的に当サイトが表示されない場合があります。</p>
+    </div>
+  </div>
 </body>
 </html>
