@@ -17,6 +17,8 @@
         #results { margin-top: 20px; white-space: pre-wrap; background: #f9f9f9; padding: 10px; border-radius: 4px; max-height: 300px; overflow-y: auto; }
         .section { margin-bottom: 20px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .success { color: green; }
+        .error { color: red; }
     </style>
 </head>
 <body>
@@ -24,17 +26,17 @@
         <h1>Discordサーバー一括参加ツール (完全版)</h1>
         
         <div class="warning">
-            <strong>警告:</strong> このツールはDiscordの利用規約に抵触する可能性があります。自己責任で使用してください。Tokenの共有/漏洩はアカウントBANの原因になります。テスト環境で1-2個のリンクから検証を。API v10使用。
+            <strong>警告:</strong> このツールはDiscordの利用規約に抵触する可能性があります。自己責任で使用してください。Tokenの共有/漏洩はアカウントBANの原因になります。テスト環境で1-2個のリンクから検証を。API v10使用。CORS制限時はローカルサーバー推奨。
         </div>
         
         <div class="section">
             <label for="tokens">トークン (一行ずつ入力、複数アカウント対応):</label>
-            <textarea id="tokens" placeholder="例:&#10;MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkw&#10;別のトークン"></textarea>
+            <textarea id="tokens" placeholder="例:&#10;MTIwMDAwMDAwMDAwMDAwMDAwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkw&#10;別のトークン"></textarea>
         </div>
         
         <div class="section">
             <label for="links">サーバー招待リンク (一行ずつ、最大10個):</label>
-            <textarea id="links" placeholder="例:&#10;https://discord.gg/abc123&#10;https://discord.com/invite/def456"></textarea>
+            <textarea id="links" placeholder="例:&#10;https://discord.gg/QqGdhtxh&#10;https://discord.com/invite/別のコード"></textarea>
         </div>
         
         <div class="section">
@@ -68,40 +70,58 @@
             }
         }
 
-        // 結果ログ追加
-        function addResult(msg) {
-            results.textContent += `${new Date().toISOString()}: ${msg}\n`;
+        // 結果ログ追加 (色付き)
+        function addResult(msg, isError = false) {
+            const className = isError ? 'error' : 'success';
+            const span = document.createElement('span');
+            span.className = className;
+            span.textContent = `${new Date().toISOString()}: ${msg}\n`;
+            results.appendChild(span);
             results.scrollTop = results.scrollHeight;
         }
 
-        // サーバー参加関数
+        // サーバー参加関数 (修正版: 空JSONボディ追加)
         async function joinServer(token, inviteCode, delay) {
             const headers = {
                 'Authorization': token,
                 'Content-Type': 'application/json'
             };
+            const body = {};  // 空のJSONオブジェクトを追加
             try {
                 const response = await fetch(`${API_URL}/${inviteCode}`, {
                     method: 'POST',
-                    headers: headers
+                    headers: headers,
+                    body: JSON.stringify(body)  // 明示的にJSONボディ送信
                 });
                 const status = response.status;
-                let reason = await response.text();
-                reason = reason.substring(0, 200);
+                let reason = '不明';
+                let errorCode = null;
+
+                // JSONパースで詳細抽出
+                try {
+                    const data = await response.json();
+                    reason = data.message || reason;
+                    errorCode = data.code || null;
+                } catch (jsonErr) {
+                    // JSONでない場合、テキストでフォールバック
+                    reason = await response.text();
+                    reason = reason.substring(0, 200);
+                }
 
                 if (status === 429) { // レート制限
                     const retryAfter = response.headers.get('Retry-After') || 5;
-                    addResult(`レート制限: ${inviteCode} で ${retryAfter}秒待機...`);
+                    addResult(`レート制限: ${inviteCode} で ${retryAfter}秒待機...`, true);
                     await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
                     return joinServer(token, inviteCode, delay); // リトライ
                 }
 
                 const success = status === 200 || status === 204;
-                addResult(`${success ? '成功' : '失敗'}: Token ${token.substring(0,10)}... で ${inviteCode} (ステータス: ${status}, 理由: ${reason})`);
+                const isError = !success;
+                addResult(`${success ? '成功' : '失敗'}: Token ${token.substring(0,10)}... で ${inviteCode} (ステータス: ${status}, コード: ${errorCode || 'N/A'}, 理由: ${reason})`, isError);
                 await new Promise(resolve => setTimeout(resolve, delay * 1000));
                 return success;
             } catch (error) {
-                addResult(`エラー: Token ${token.substring(0,10)}... で ${inviteCode} - ${error.message}`);
+                addResult(`エラー: Token ${token.substring(0,10)}... で ${inviteCode} - ${error.message}`, true);
                 await new Promise(resolve => setTimeout(resolve, delay * 1000));
                 return false;
             }
@@ -133,19 +153,19 @@
 
             startBtn.disabled = true;
             startBtn.textContent = '実行中...';
-            results.textContent = '';
+            results.innerHTML = '';  // リセット
             progress.textContent = `${tokens.length} トークンで ${inviteCodes.length} サーバー処理中... (遅延: ${delay}s)`;
 
             for (let i = 0; i < tokens.length; i++) {
                 const token = tokens[i];
-                addResult(`\n--- Token ${token.substring(0,10)}... の処理開始 ---`);
+                addResult(`--- Token ${token.substring(0,10)}... の処理開始 ---`);
                 for (let j = 0; j < inviteCodes.length; j++) {
                     const code = inviteCodes[j];
                     await joinServer(token, code, delay);
                 }
             }
 
-            addResult('\n全処理完了。');
+            addResult('全処理完了。');
             startBtn.disabled = false;
             startBtn.textContent = '一括参加開始';
         }
