@@ -1,1 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discordサーバー一括参加ツール (完全版)</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #7289da; text-align: center; }
+        .warning { background: #ffeb3b; padding: 10px; border-radius: 4px; margin-bottom: 20px; color: #333; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #7289da; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #5b6eae; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #progress { margin-top: 10px; }
+        #results { margin-top: 20px; white-space: pre-wrap; background: #f9f9f9; padding: 10px; border-radius: 4px; max-height: 300px; overflow-y: auto; }
+        .section { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Discordサーバー一括参加ツール (完全版)</h1>
+        
+        <div class="warning">
+            <strong>警告:</strong> このツールはDiscordの利用規約に抵触する可能性があります。自己責任で使用してください。Tokenの共有/漏洩はアカウントBANの原因になります。テスト環境で1-2個のリンクから検証を。API v10使用。
+        </div>
+        
+        <div class="section">
+            <label for="tokens">トークン (一行ずつ入力、複数アカウント対応):</label>
+            <textarea id="tokens" placeholder="例:&#10;MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkw&#10;別のトークン"></textarea>
+        </div>
+        
+        <div class="section">
+            <label for="links">サーバー招待リンク (一行ずつ、最大10個):</label>
+            <textarea id="links" placeholder="例:&#10;https://discord.gg/abc123&#10;https://discord.com/invite/def456"></textarea>
+        </div>
+        
+        <div class="section">
+            <label for="delay">リクエスト間待機時間 (秒、デフォルト: 2):</label>
+            <input type="number" id="delay" value="2" min="1" step="0.5">
+        </div>
+        
+        <button id="startBtn">一括参加開始</button>
+        <div id="progress"></div>
+        <div id="results"></div>
+    </div>
 
+    <script>
+        const API_URL = 'https://discord.com/api/v10/invites';
+        const startBtn = document.getElementById('startBtn');
+        const progress = document.getElementById('progress');
+        const results = document.getElementById('results');
+        const delayInput = document.getElementById('delay');
+
+        // 招待リンクからコード抽出
+        function extractInviteCode(link) {
+            try {
+                const url = new URL(link);
+                let path = url.pathname.substring(1); // スラッシュ除去
+                if (path.startsWith('invite/')) {
+                    path = path.substring(7);
+                }
+                return path || null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // 結果ログ追加
+        function addResult(msg) {
+            results.textContent += `${new Date().toISOString()}: ${msg}\n`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        // サーバー参加関数
+        async function joinServer(token, inviteCode, delay) {
+            const headers = {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            };
+            try {
+                const response = await fetch(`${API_URL}/${inviteCode}`, {
+                    method: 'POST',
+                    headers: headers
+                });
+                const status = response.status;
+                let reason = await response.text();
+                reason = reason.substring(0, 200);
+
+                if (status === 429) { // レート制限
+                    const retryAfter = response.headers.get('Retry-After') || 5;
+                    addResult(`レート制限: ${inviteCode} で ${retryAfter}秒待機...`);
+                    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+                    return joinServer(token, inviteCode, delay); // リトライ
+                }
+
+                const success = status === 200 || status === 204;
+                addResult(`${success ? '成功' : '失敗'}: Token ${token.substring(0,10)}... で ${inviteCode} (ステータス: ${status}, 理由: ${reason})`);
+                await new Promise(resolve => setTimeout(resolve, delay * 1000));
+                return success;
+            } catch (error) {
+                addResult(`エラー: Token ${token.substring(0,10)}... で ${inviteCode} - ${error.message}`);
+                await new Promise(resolve => setTimeout(resolve, delay * 1000));
+                return false;
+            }
+        }
+
+        // メイン実行
+        async function runJoiner() {
+            const tokensText = document.getElementById('tokens').value.trim();
+            const linksText = document.getElementById('links').value.trim();
+            const delay = parseFloat(delayInput.value) || 2;
+
+            if (!tokensText || !linksText) {
+                alert('トークンとリンクを入力してください。');
+                return;
+            }
+
+            const tokens = tokensText.split('\n').map(t => t.trim()).filter(t => t);
+            const links = linksText.split('\n').map(l => l.trim()).filter(l => l);
+            if (links.length > 10) {
+                alert('リンクは最大10個までです。');
+                return;
+            }
+
+            const inviteCodes = links.map(link => extractInviteCode(link)).filter(code => code);
+            if (inviteCodes.length === 0) {
+                alert('有効な招待コードがありません。');
+                return;
+            }
+
+            startBtn.disabled = true;
+            startBtn.textContent = '実行中...';
+            results.textContent = '';
+            progress.textContent = `${tokens.length} トークンで ${inviteCodes.length} サーバー処理中... (遅延: ${delay}s)`;
+
+            for (let i = 0; i < tokens.length; i++) {
+                const token = tokens[i];
+                addResult(`\n--- Token ${token.substring(0,10)}... の処理開始 ---`);
+                for (let j = 0; j < inviteCodes.length; j++) {
+                    const code = inviteCodes[j];
+                    await joinServer(token, code, delay);
+                }
+            }
+
+            addResult('\n全処理完了。');
+            startBtn.disabled = false;
+            startBtn.textContent = '一括参加開始';
+        }
+
+        startBtn.addEventListener('click', runJoiner);
+    </script>
+</body>
+</html>
