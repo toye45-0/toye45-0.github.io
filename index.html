@@ -2,131 +2,108 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>名鉄 運行シミュレーター</title>
+  <title>名鉄運行案内シミュレーター</title>
   <style>
     body {
       margin: 0;
       background: black;
-      color: white;
-      font-family: monospace;
+      color: orange;
+      font-family: 'MS Gothic', monospace;
+      overflow: hidden;
+    }
+    .display {
+      width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
-      overflow: hidden;
     }
-    h1 {
-      font-size: 1.5em;
-      margin: 10px;
-      color: #0f0;
+    .main {
+      font-size: 5vw;
+      font-weight: bold;
+      margin-bottom: 2vh;
+      text-shadow: 0 0 8px #ff8000;
     }
-    button {
-      font-size: 1.2em;
-      padding: 8px 20px;
-      margin: 10px;
-      background: #222;
-      color: #fff;
-      border: 2px solid #555;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #444;
-    }
-    #led {
-      background: black;
-      font-size: 4vw;
-      letter-spacing: 0.2em;
-      padding: 15px;
-      border: 6px solid #333;
-      text-align: center;
-      width: 90%;
-      height: 150px;
+    .scroll-area {
+      font-size: 3vw;
       white-space: nowrap;
       overflow: hidden;
-      box-shadow: 0 0 15px #0f0;
+      width: 90%;
+      border-top: 2px solid orange;
+      border-bottom: 2px solid orange;
+      padding: 10px 0;
     }
-    .scroll {
+    .scroll-text {
       display: inline-block;
       padding-left: 100%;
-      animation: scrollText 60s linear infinite; /* ゆっくりスクロール */
+      animation: scroll 25s linear infinite;
     }
-    @keyframes scrollText {
-      from { transform: translateX(100%); }
-      to { transform: translateX(-100%); }
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-100%); }
     }
   </style>
 </head>
 <body>
-  <h1>🚋 名鉄 運行シミュレーター</h1>
+  <div class="display">
+    <div class="main" id="mainText">準急 吉良吉田 行き</div>
+    <div class="scroll-area">
+      <span class="scroll-text" id="scrollText">
+        停車駅: 新安城・知立・神宮前・金山・名古屋
+      </span>
+    </div>
+  </div>
 
-  <button onclick="startTrain()">▶ 運行開始</button>
-  <div id="led"><span class="scroll">準備中...</span></div>
+  <script>
+    const stations = ["新安城","知立","東岡崎","国府","豊橋","鳴海","神宮前","金山","名鉄名古屋","岩倉","犬山","岐阜","吉良吉田"];
+    const types = ["普通","急行","準急","特急","快速特急"];
+    const destinations = ["豊橋","岐阜","吉良吉田","犬山","名鉄名古屋"];
 
-<script>
-const stations = [
-  "豊橋","国府","東岡崎","新安城","知立","神宮前","金山",
-  "名鉄名古屋","栄生","須ヶ口","岩倉","犬山","新可児","御嵩"
-];
-const trainTypes = ["普通","急行","準急","特急"];
-const directions = ["岐阜","豊橋","新鵜沼","吉良吉田","犬山","内海"];
+    function randomPick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
 
-function randomPick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+    // アナウンス関数
+    function speak(text) {
+      let utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "ja-JP";
+      utter.rate = 0.9;   // ゆっくり
+      utter.pitch = 0.8;  // 少し低め
+      speechSynthesis.speak(utter);
+    }
 
-function speak(text) {
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "ja-JP";
-  utter.rate = 1;
-  utter.pitch = 1;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utter);
-}
+    function startTrain() {
+      // 列車設定
+      let type = randomPick(types);
+      let dest = randomPick(destinations);
+      let mainText = `${type} ${dest} 行き`;
+      document.getElementById("mainText").innerText = mainText;
 
-function startTrain() {
-  const start = randomPick(stations);
-  const type = randomPick(trainTypes);
-  const dest = randomPick(directions);
+      // 停車駅設定
+      let route = [];
+      for (let i=0; i<8; i++) route.push(randomPick(stations));
+      let scrollText = `停車駅: ${route.join("・")}`;
+      document.getElementById("scrollText").innerText = scrollText;
 
-  // 停車駅（12駅）
-  let stops = [];
-  let numStops = 12;
-  for (let i = 0; i < numStops; i++) {
-    stops.push(randomPick(stations));
-  }
+      // 出発アナウンス
+      speak(`まもなく、${type} ${dest}行きが発車します。`);
 
-  // イベント
-  let eventMsg = "";
-  if (Math.random() < 0.01) {
-    eventMsg = "ただいま人身事故が発生しました。運転を見合わせます。";
-  } else if (Math.random() < 0.3) {
-    eventMsg = "途中駅で通過待ちがあります。";
-  } else if (Math.random() < 0.3) {
-    eventMsg = "途中駅で他の路線にお乗り換えいただけます。";
-  }
+      // 各駅アナウンス（15秒ごと → 体感5分）
+      const interval = 15000;
+      route.forEach((st, i) => {
+        setTimeout(() => {
+          speak(`次は、${st}です。`);
+        }, (i+1)*interval);
+      });
 
-  // LED表示
-  const mainText = `${type} ${dest} 行き`;
-  const detailText = `始発: ${start} ／ 停車駅: ${stops.join("・")} ${eventMsg}`;
-  document.getElementById("led").innerHTML = `<span class="scroll">${mainText}　${detailText}</span>`;
+      // 終点アナウンス
+      setTimeout(() => {
+        speak(`終点、${dest}です。ご利用ありがとうございました。`);
+      }, (route.length+1)*interval);
+    }
 
-  // 出発アナウンス
-  speak(`${start}始発、${type}${dest}行きです。${eventMsg || "ご乗車ありがとうございます。"}`);
-
-  // 5分間隔で次駅アナウンス
-  stops.forEach((station, i) => {
-    setTimeout(() => {
-      speak(`次は、${station}です。`);
-    }, (i + 1) * 5000); // 5秒 = 5分相当
-  });
-
-  // 終点アナウンス
-  setTimeout(() => {
-    speak(`まもなく終点、${dest}です。ご利用ありがとうございました。`);
-  }, (stops.length + 1) * 5000);
-}
-</script>
+    window.onload = startTrain;
+  </script>
 </body>
 </html>
