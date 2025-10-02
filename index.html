@@ -2,31 +2,55 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>名鉄 運行シミュレーション</title>
+  <title>電車案内LEDシミュレーター</title>
   <style>
     body {
       margin: 0;
       background: black;
       color: white;
       font-family: monospace;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-    /* LED風表示領域 */
-    #led {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: black;
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: #0f0;
+    }
+    textarea {
+      width: 80%;
+      height: 100px;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+      padding: 10px;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      background: #222;
       color: #fff;
-      font-size: 6vw;
-      letter-spacing: 0.3em;
-      white-space: nowrap;
-      padding: 20px 40px;
+      border: 2px solid #555;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #444;
+    }
+    #led {
+      background: black;
+      font-size: 5vw;
+      letter-spacing: 0.2em;
+      padding: 20px;
       border: 8px solid #222;
       text-align: center;
       width: 90%;
+      white-space: nowrap;
       overflow: hidden;
+      box-shadow: 0 0 20px #0f0;
     }
     .scroll {
       display: inline-block;
@@ -40,80 +64,27 @@
   </style>
 </head>
 <body>
+  <h1>🚋 電車案内LEDシミュレーター</h1>
+
+  <textarea id="inputText" placeholder="案内したい文章を入力してください（例：次は 名古屋 です）"></textarea>
+  <button onclick="runDisplay()">表示＆読み上げ</button>
+
   <div id="led"><span class="scroll">準備中...</span></div>
 
 <script>
-// 運行スケジュール（サンプル）
-const trains = [
-  { type: "普通", dest: "新安城", stops: ["名鉄名古屋","金山","神宮前","新安城"], transfer: "神宮前で常滑線にお乗換え" },
-  { type: "急行", dest: "犬山", stops: ["名鉄名古屋","栄生","名鉄岐阜","犬山"], transfer: "名鉄岐阜で各務原線にお乗換え" },
-  { type: "特急", dest: "豊橋", stops: ["名鉄名古屋","金山","知立","東岡崎","豊橋"], transfer: "知立で三河線にお乗換え" }
-];
-
-let currentTrainIndex = 0;
-
-// イベント確率
-function randomAccident() { return Math.random() < 0.0001; }  // 0.01%
-function randomPassing() { return Math.random() < 0.1; }     // 10%
-function randomWait() { return Math.random() < 0.05; }       // 5%
-
-// LED表示更新
-function showMessage(text) {
+function runDisplay() {
+  const text = document.getElementById("inputText").value || "入力がありません";
   const led = document.getElementById("led");
   led.innerHTML = `<span class="scroll">${text}</span>`;
+
+  // 読み上げ
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "ja-JP";  // 日本語
+  utter.rate = 1;        // 速度（0.5 ～ 2）
+  utter.pitch = 1;       // 声の高さ
+  speechSynthesis.cancel(); // 前の読み上げを止める
+  speechSynthesis.speak(utter);
 }
-
-// 車内運行モード
-function runTrain(train) {
-  let idx = 0;
-  function nextStop() {
-    if (randomAccident()) {
-      showMessage("人身事故のため運転を見合わせています");
-      setTimeout(nextStop, 8000);
-      return;
-    }
-    if (idx < train.stops.length) {
-      showMessage("次は " + train.stops[idx] + " です");
-
-      // 乗換案内
-      if (idx === 1) {
-        setTimeout(() => { showMessage(train.transfer); }, 2500);
-      }
-
-      // 通過待ち
-      if (randomPassing()) {
-        setTimeout(() => { showMessage(train.stops[idx] + " で通過待ちを行います"); }, 4000);
-      }
-
-      // 隣電車待ち
-      if (randomWait()) {
-        setTimeout(() => { showMessage("ただいま隣のホームの電車の発車を待っております"); }, 5000);
-      }
-
-      idx++;
-      setTimeout(nextStop, 7000);
-    } else {
-      showMessage("終点 " + train.dest + " に到着しました");
-      currentTrainIndex++;
-      setTimeout(startNextTrain, 5000);
-    }
-  }
-  nextStop();
-}
-
-// 次の電車開始
-function startNextTrain() {
-  if (currentTrainIndex < trains.length) {
-    const t = trains[currentTrainIndex];
-    showMessage(t.type + " " + t.dest + " 行き");
-    setTimeout(() => runTrain(t), 3000);
-  } else {
-    showMessage("本日の運行は終了しました");
-  }
-}
-
-// 初期開始
-startNextTrain();
 </script>
 </body>
 </html>
