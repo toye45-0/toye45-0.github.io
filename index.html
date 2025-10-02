@@ -4,130 +4,115 @@
   <meta charset="UTF-8">
   <title>名鉄 運行シミュレーション</title>
   <style>
-    body { background: black; color: white; font-family: monospace; }
-    h1, h2 { text-align: center; }
-    .board { width: 700px; margin: auto; background: #333; padding: 10px; }
-    .train { display: flex; justify-content: space-between; padding: 5px; border-bottom: 1px solid gray; }
-    .departed { opacity: 0.4; text-decoration: line-through; }
-    .led { 
-      background: black; 
-      color: lime; 
-      font-size: 2em; 
-      white-space: nowrap; 
-      overflow: hidden; 
-      border: 2px solid #444;
-      padding: 5px;
-      margin: 20px auto;
-      width: 90%;
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    /* LED風表示領域 */
+    #led {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: black;
+      color: #fff;
+      font-size: 6vw;
+      letter-spacing: 0.3em;
+      white-space: nowrap;
+      padding: 20px 40px;
+      border: 8px solid #222;
       text-align: center;
+      width: 90%;
+      overflow: hidden;
+    }
+    .scroll {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scrollText 12s linear infinite;
+    }
+    @keyframes scrollText {
+      from { transform: translateX(100%); }
+      to { transform: translateX(-100%); }
     }
   </style>
 </head>
 <body>
-  <h1>発車案内</h1>
-  <div id="board" class="board"></div>
-
-  <h2>車内案内表示</h2>
-  <div id="led" class="led">準備中...</div>
+  <div id="led"><span class="scroll">準備中...</span></div>
 
 <script>
-// 運行スケジュール（例）
+// 運行スケジュール（サンプル）
 const trains = [
-  { time: "9:20", type: "普通", dest: "新安城", stops: ["名鉄名古屋","金山","神宮前","新安城"], transfer: "神宮前で常滑線にお乗換え" },
-  { time: "9:30", type: "急行", dest: "犬山", stops: ["名鉄名古屋","栄生","名鉄岐阜","犬山"], transfer: "名鉄岐阜で各務原線にお乗換え" },
-  { time: "9:40", type: "特急", dest: "豊橋", stops: ["名鉄名古屋","金山","知立","東岡崎","豊橋"], transfer: "知立で三河線にお乗換え" }
+  { type: "普通", dest: "新安城", stops: ["名鉄名古屋","金山","神宮前","新安城"], transfer: "神宮前で常滑線にお乗換え" },
+  { type: "急行", dest: "犬山", stops: ["名鉄名古屋","栄生","名鉄岐阜","犬山"], transfer: "名鉄岐阜で各務原線にお乗換え" },
+  { type: "特急", dest: "豊橋", stops: ["名鉄名古屋","金山","知立","東岡崎","豊橋"], transfer: "知立で三河線にお乗換え" }
 ];
 
 let currentTrainIndex = 0;
 
-// 発車案内更新
-function updateBoard() {
-  const board = document.getElementById("board");
-  board.innerHTML = "";
-  trains.forEach((t, i) => {
-    const div = document.createElement("div");
-    div.className = "train" + (i < currentTrainIndex ? " departed" : "");
-    div.innerHTML = `<span>${t.type}</span><span>${t.time}</span><span>${t.dest}行き</span>`;
-    board.appendChild(div);
-  });
-}
+// イベント確率
+function randomAccident() { return Math.random() < 0.0001; }  // 0.01%
+function randomPassing() { return Math.random() < 0.1; }     // 10%
+function randomWait() { return Math.random() < 0.05; }       // 5%
 
-// ランダムに人身事故 (0.01%)
-function randomAccident() {
-  return Math.random() < 0.0001;
-}
-
-// ランダムに通過待ち (10%)
-function randomPassing() {
-  return Math.random() < 0.1;
-}
-
-// ランダムに隣電車待ち (5%)
-function randomWait() {
-  return Math.random() < 0.05;
-}
-
-// 車内LED運行
-function runTrain(train) {
+// LED表示更新
+function showMessage(text) {
   const led = document.getElementById("led");
-  let idx = 0;
+  led.innerHTML = `<span class="scroll">${text}</span>`;
+}
 
+// 車内運行モード
+function runTrain(train) {
+  let idx = 0;
   function nextStop() {
-    // 人身事故
     if (randomAccident()) {
-      led.textContent = "人身事故のため運転を見合わせています";
+      showMessage("人身事故のため運転を見合わせています");
       setTimeout(nextStop, 8000);
       return;
     }
-
     if (idx < train.stops.length) {
-      // 停車駅案内
-      led.textContent = "次は " + train.stops[idx] + " です";
+      showMessage("次は " + train.stops[idx] + " です");
 
-      // 乗換案内（例）
+      // 乗換案内
       if (idx === 1) {
-        setTimeout(() => {
-          led.textContent = train.transfer;
-        }, 2000);
+        setTimeout(() => { showMessage(train.transfer); }, 2500);
       }
 
       // 通過待ち
       if (randomPassing()) {
-        setTimeout(() => {
-          led.textContent = train.stops[idx] + " で通過待ちを行います";
-        }, 3000);
+        setTimeout(() => { showMessage(train.stops[idx] + " で通過待ちを行います"); }, 4000);
       }
 
       // 隣電車待ち
       if (randomWait()) {
-        setTimeout(() => {
-          led.textContent = "ただいま隣のホームの電車の発車を待っております";
-        }, 4000);
+        setTimeout(() => { showMessage("ただいま隣のホームの電車の発車を待っております"); }, 5000);
       }
 
       idx++;
-      setTimeout(nextStop, 6000); // 次の案内へ
+      setTimeout(nextStop, 7000);
     } else {
-      led.textContent = "終点 " + train.dest + " に到着しました";
+      showMessage("終点 " + train.dest + " に到着しました");
       currentTrainIndex++;
-      updateBoard();
       setTimeout(startNextTrain, 5000);
     }
   }
   nextStop();
 }
 
-// 次の電車スタート
+// 次の電車開始
 function startNextTrain() {
   if (currentTrainIndex < trains.length) {
-    runTrain(trains[currentTrainIndex]);
+    const t = trains[currentTrainIndex];
+    showMessage(t.type + " " + t.dest + " 行き");
+    setTimeout(() => runTrain(t), 3000);
   } else {
-    document.getElementById("led").textContent = "本日の運行は終了しました";
+    showMessage("本日の運行は終了しました");
   }
 }
 
-// 初期化
-updateBoard();
+// 初期開始
 startNextTrain();
 </script>
 </body>
