@@ -11,28 +11,30 @@
       font-family: 'MS Gothic', monospace;
       overflow: hidden;
     }
-    .display {
+    /* 画面全体を電光掲示板風に */
+    .container {
       width: 100vw;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
+      padding: 5vh 0;
+      box-sizing: border-box;
     }
     .main {
-      font-size: 6vw;
+      font-size: 8vw;
       font-weight: bold;
-      margin-bottom: 3vh;
-      text-shadow: 0 0 12px #ff8000;
+      text-shadow: 0 0 20px #ff8000, 0 0 40px #ff4000;
     }
     .scroll-area {
-      font-size: 3vw;
+      font-size: 4vw;
       white-space: nowrap;
       overflow: hidden;
-      width: 95%;
+      width: 100%;
       border-top: 2px solid orange;
       border-bottom: 2px solid orange;
-      padding: 10px 0;
+      padding: 20px 0;
     }
     .scroll-text {
       display: inline-block;
@@ -46,7 +48,7 @@
   </style>
 </head>
 <body>
-  <div class="display">
+  <div class="container">
     <div class="main" id="mainText">準急 吉良吉田 行き</div>
     <div class="scroll-area">
       <span class="scroll-text" id="scrollText">停車駅: 新安城・知立・神宮前・名古屋</span>
@@ -58,12 +60,10 @@
     const types = ["普通","急行","準急","特急","快速特急"];
     const destinations = ["豊橋","岐阜","吉良吉田","犬山","名鉄名古屋"];
 
-    // ランダム選択
     function randomPick(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    // 音声読み上げ
     function speak(text, lang="ja-JP") {
       let utter = new SpeechSynthesisUtterance(text);
       utter.lang = lang;
@@ -91,20 +91,12 @@
 
       route.forEach((station, i) => {
         setTimeout(() => {
-          // 停車案内
           speak(`次は、${station}です。`);
-          // 通過待ち案内
           speak(`${station}駅で、特急の通過待ちを行います。`);
-          // 乗換案内
           speak(`${station}駅で、地下鉄${randomPick(["東山線","鶴舞線","名城線"])}にお乗り換えです。`);
-
-          // 英語案内（追加したい場合）
-          // speak(`Next stop is ${station}. Please change here for the subway.`, "en-US");
-
         }, (i+1)*interval);
       });
 
-      // 終点
       setTimeout(() => {
         speak(`まもなく、終点 ${dest}です。ご利用ありがとうございました。`);
       }, (route.length+1)*interval);
