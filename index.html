@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>adsteam公式サイト | Discord Bot ソースコード提供</title>
-  <meta name="description" content="adsteam公式サイトです。Discord Bot のソースコードを登録者限定で提供中。10月・11月 入会受付中！">
+  <title>adsteam公式｜Discord Bot提供</title>
+  <meta name="description" content="adsteam公式サイトです。Discord Bot のソースコードを YouTube登録者限定で提供中。10月・11月 入会受付中！">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -19,7 +19,7 @@
       background: #5865F2; /* Discordカラー */
       color: white;
       padding: 20px;
-      font-size: 1.5em;
+      font-size: 1.6em;
       font-weight: bold;
     }
     main {
@@ -33,7 +33,12 @@
       font-weight: bold;
       margin: 15px 0;
       display: inline-block;
-      font-size: 1.3em;
+      font-size: 1.2em;
+    }
+    .notice {
+      color: red;
+      font-weight: bold;
+      margin: 15px 0;
     }
     a.button {
       display: inline-block;
@@ -60,7 +65,7 @@
 </head>
 <body>
   <header>
-    🤖 adsteam公式サイト
+    🤖 adsteam公式｜Discord Bot提供
   </header>
 
   <main>
@@ -70,14 +75,19 @@
       <b>YouTube登録者限定</b>で提供しています。
     </p>
 
+    <p class="notice">
+      ※フリーチャット題名配信は開始されません。<br>
+      コメントで「Botコード希望」と書いてください。
+    </p>
+
     <!-- 自動で受付表示が切り替わる部分 -->
     <div id="notice" class="highlight"></div>
 
     <h3>🔗 ご利用の流れ</h3>
     <ol style="text-align: left; display: inline-block;">
       <li>YouTube「toye不定期」をチャンネル登録</li>
-      <li>フリーチャットで「Botコード希望」とコメント</li>
-      <li>確認後、ソースコードを提供します</li>
+      <li>フリーチャットやコメントで「Botコード希望」と書く</li>
+      <li>確認後、Discordにてソースコードを提供します</li>
     </ol>
 
     <a class="button" href="https://www.youtube.com/@toye不定期?sub_confirmation=1" target="_blank">
