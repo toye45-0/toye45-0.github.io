@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>発車案内シミュレーター</title>
+<title>名鉄 発車案内シミュレーター</title>
 <style>
   body {
     margin: 0;
@@ -34,7 +34,7 @@
   }
   .track { width: 12%; color: #0f0; text-align: center; }
   .time  { width: 15%; color: #0f0; text-align: center; }
-  .type  { width: 15%; color: #ff0; text-align: center; }
+  .type  { width: 15%; color: #ff0; text-align: center; font-weight: bold; }
   .dest  { width: 38%; text-align: left; font-size: 2.7vh; }
   .note  { width: 20%; text-align: center; color: #0ff; animation: blink 1s infinite; }
   @keyframes blink { 50% { opacity: 0; } }
@@ -55,6 +55,11 @@
     0%   { transform: translateX(0); }
     100% { transform: translateX(-100%); }
   }
+
+  .delay {
+    color: red;
+    font-weight: bold;
+  }
 </style>
 </head>
 <body>
@@ -62,11 +67,12 @@
 
 <script>
   const types = ["普通","準急","急行","特急","快速特急"];
-  const stations = ["名古屋","金山","神宮前","知立","東岡崎","豊橋","犬山","新鵜沼","吉良吉田"];
+  const stations = ["名古屋","金山","神宮前","知立","新安城","東岡崎","豊橋","犬山","新鵜沼","吉良吉田"];
   const tracks = ["1番線","2番線","3番線","4番線","5番線"];
   
   let trains = [];
 
+  // ランダム列車生成
   function randomTrain(addMinutes=0) {
     const now = new Date();
     now.setMinutes(now.getMinutes()+addMinutes);
@@ -74,10 +80,23 @@
     const type = types[Math.floor(Math.random()*types.length)];
     const dest = stations[Math.floor(Math.random()*stations.length)];
     const track = tracks[Math.floor(Math.random()*tracks.length)];
-    const stops = stations.sort(()=>Math.random()-0.5).slice(0,5).join(" → ");
-    return {time, type, dest, track, stops};
+    const stops = stations.sort(()=>Math.random()-0.5).slice(0,6).join(" → ");
+
+    let accident = false;
+    let shortDest = null;
+
+    // 人身事故発生率 1%
+    if(Math.random() < 0.01){
+      accident = true;
+      if(Math.random() < 0.5){
+        shortDest = stations[Math.floor(Math.random()*stations.length)];
+      }
+    }
+
+    return {time, type, dest, track, stops, accident, shortDest};
   }
 
+  // 初期化
   function initBoard() {
     trains = [];
     for (let i=0;i<10;i++) {
@@ -86,36 +105,83 @@
     renderBoard();
   }
 
+  // 表示
   function renderBoard() {
     const board = document.getElementById("board");
     board.innerHTML = "";
     trains.forEach((t,i)=>{
       const row = document.createElement("div");
       row.className = "row";
-      row.innerHTML = `
-        <div class="main">
-          <div class="track">${t.track}</div>
-          <div class="time">${t.time}</div>
-          <div class="type">${t.type}</div>
-          <div class="dest">${t.dest}</div>
-          <div class="note">${i===0 ? "まもなく" : ""}</div>
-        </div>
-        <div class="stops"><span class="scroll">この電車は ${t.type} ${t.dest} 行きです。 ${t.stops} の順に停まります。</span></div>
-      `;
+
+      if(t.accident && t.shortDest){
+        // 行き先変更
+        row.innerHTML = `
+          <div class="main">
+            <div class="track">${t.track}</div>
+            <div class="time delay">${t.time}</div>
+            <div class="type delay">${t.type}</div>
+            <div class="dest delay">${t.dest} → ${t.shortDest} 行き先変更</div>
+            <div class="note delay">行き先変更</div>
+          </div>
+          <div class="stops delay">この電車は人身事故のため、${t.shortDest}止まりとなります。</div>
+        `;
+      } else if(t.accident){
+        // 運休
+        row.innerHTML = `
+          <div class="main">
+            <div class="track">${t.track}</div>
+            <div class="time delay">運転見合わせ</div>
+            <div class="type delay">---</div>
+            <div class="dest delay">人身事故発生</div>
+            <div class="note delay">全線停止</div>
+          </div>
+          <div class="stops delay">ただいま人身事故のため運転を見合わせています。</div>
+        `;
+      } else {
+        // 通常
+        row.innerHTML = `
+          <div class="main">
+            <div class="track">${t.track}</div>
+            <div class="time">${t.time}</div>
+            <div class="type">${t.type}</div>
+            <div class="dest">${t.dest}</div>
+            <div class="note">${i===0 ? "まもなく" : ""}</div>
+          </div>
+          <div class="stops"><span class="scroll">この電車は ${t.type} ${t.dest} 行きです。 ${t.stops} の順に停まります。</span></div>
+        `;
+      }
       board.appendChild(row);
     });
   }
 
+  // アナウンス
   function announce(train) {
-    const msg = new SpeechSynthesisUtterance(
+    if(train.accident && train.shortDest){
+      let msg = new SpeechSynthesisUtterance(
+        `まもなく ${train.track} から発車する ${train.type} ${train.dest} 行きは、人身事故の影響により、${train.shortDest} 止まりに変更となります。`
+      );
+      msg.lang = "ja-JP";
+      speechSynthesis.speak(msg);
+      return;
+    }
+    if(train.accident){
+      let msg = new SpeechSynthesisUtterance("ただいま人身事故のため運転を見合わせています。");
+      msg.lang = "ja-JP";
+      speechSynthesis.speak(msg);
+      return;
+    }
+
+    // 通常
+    let jp = new SpeechSynthesisUtterance(
       `まもなく ${train.track} に、${train.type} ${train.dest} 行きが発車します。`
     );
-    msg.lang = "ja-JP";
-    speechSynthesis.speak(msg);
+    jp.lang = "ja-JP";
+    speechSynthesis.speak(jp);
   }
 
+  // 発車処理
   function tick() {
-    const departing = trains.shift(); // 発車
+    const departing = trains.shift(); // 先頭の列車発車
     announce(departing);
     const newTrain = randomTrain(20); // 新しい列車を追加
     trains.push(newTrain);
