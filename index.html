@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>駅 発車案内シミュレーター</title>
+<title>発車案内シミュレーター</title>
 <style>
   body {
     margin: 0;
@@ -18,24 +18,24 @@
     width: 95%;
     background: #111;
     border: 5px solid #333;
-    padding: 20px;
+    padding: 10px;
   }
   .row {
     display: flex;
     flex-direction: column;
-    border-bottom: 2px solid #333;
-    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    padding: 5px 0;
   }
   .main {
     display: flex;
     justify-content: space-between;
-    font-size: 4vh;
+    font-size: 2.5vh;
     align-items: center;
   }
-  .track { width: 15%; color: #0f0; text-align: center; }
+  .track { width: 12%; color: #0f0; text-align: center; }
   .time  { width: 15%; color: #0f0; text-align: center; }
   .type  { width: 15%; color: #ff0; text-align: center; }
-  .dest  { width: 35%; text-align: left; font-size: 4.5vh; }
+  .dest  { width: 38%; text-align: left; font-size: 2.7vh; }
   .note  { width: 20%; text-align: center; color: #0ff; animation: blink 1s infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 
@@ -43,7 +43,7 @@
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
-    font-size: 2.5vh;
+    font-size: 2vh;
     color: #ccc;
   }
   .scroll {
@@ -55,97 +55,75 @@
     0%   { transform: translateX(0); }
     100% { transform: translateX(-100%); }
   }
-
-  .announce {
-    margin-top: 15px;
-    font-size: 3vh;
-    color: #ff0;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  .announce span {
-    display: inline-block;
-    padding-left: 100%;
-    animation: scroll-left 25s linear infinite;
-  }
 </style>
 </head>
 <body>
-  <div class="board">
-    <div class="row">
-      <div class="main">
-        <div class="track" id="track1">1番線</div>
-        <div class="time"  id="time1">12:05</div>
-        <div class="type"  id="type1">普通</div>
-        <div class="dest"  id="dest1">名古屋</div>
-        <div class="note"  id="note1">まもなく</div>
-      </div>
-      <div class="stops"><span id="stops1" class="scroll">知立 → 金山 → 神宮前 → 名古屋</span></div>
-    </div>
-    <div class="announce"><span id="announceText"></span></div>
-  </div>
+  <div class="board" id="board"></div>
 
 <script>
-  const trains = [
-    {
-      dest:"名古屋",
-      typeBefore:"普通",
-      typeAfter:"急行",
-      changeStation:"金山",
-      stopsBefore:"知立 → 金山",
-      stopsAfter:"金山 → 神宮前 → 名古屋"
-    },
-    {
-      dest:"豊橋",
-      typeBefore:"普通",
-      typeAfter:"特急",
-      changeStation:"神宮前",
-      stopsBefore:"知立 → 神宮前",
-      stopsAfter:"神宮前 → 国府 → 豊橋"
+  const types = ["普通","準急","急行","特急","快速特急"];
+  const stations = ["名古屋","金山","神宮前","知立","東岡崎","豊橋","犬山","新鵜沼","吉良吉田"];
+  const tracks = ["1番線","2番線","3番線","4番線","5番線"];
+  
+  let trains = [];
+
+  function randomTrain(addMinutes=0) {
+    const now = new Date();
+    now.setMinutes(now.getMinutes()+addMinutes);
+    const time = now.toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});
+    const type = types[Math.floor(Math.random()*types.length)];
+    const dest = stations[Math.floor(Math.random()*stations.length)];
+    const track = tracks[Math.floor(Math.random()*tracks.length)];
+    const stops = stations.sort(()=>Math.random()-0.5).slice(0,5).join(" → ");
+    return {time, type, dest, track, stops};
+  }
+
+  function initBoard() {
+    trains = [];
+    for (let i=0;i<10;i++) {
+      trains.push(randomTrain(i*2));
     }
-  ];
-
-  function playAnnouncements(train) {
-    // 1. 最初
-    let msg1 = new SpeechSynthesisUtterance(`この電車は ${train.typeBefore} ${train.dest} 行きです。`);
-    msg1.lang = "ja-JP";
-    speechSynthesis.speak(msg1);
-
-    // 2. 種別変更アナウンス
-    let msg2 = new SpeechSynthesisUtterance(`${train.changeStation} からは ${train.typeAfter} になります。`);
-    msg2.lang = "ja-JP";
-    setTimeout(()=>speechSynthesis.speak(msg2), 4000);
-
-    // 3. 停車駅案内（前半）
-    let msg3 = new SpeechSynthesisUtterance(`${train.stopsBefore} に停まります。`);
-    msg3.lang = "ja-JP";
-    setTimeout(()=>speechSynthesis.speak(msg3), 7000);
-
-    // 4. 停車駅案内（後半）
-    let msg4 = new SpeechSynthesisUtterance(`${train.stopsAfter} の順に停まります。`);
-    msg4.lang = "ja-JP";
-    setTimeout(()=>speechSynthesis.speak(msg4), 10000);
+    renderBoard();
   }
 
-  function updateBoard() {
-    const train = trains[Math.floor(Math.random()*trains.length)];
-    const now = new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});
-
-    document.getElementById("time1").textContent = now;
-    document.getElementById("type1").textContent = train.typeBefore;
-    document.getElementById("dest1").textContent = train.dest;
-    document.getElementById("stops1").textContent =
-      train.stopsBefore + " → " + train.typeAfter + " (" + train.changeStation + "から) → " + train.stopsAfter;
-
-    const announceText = `この電車は ${train.typeBefore} ${train.dest} 行きです。 ${train.changeStation} から ${train.typeAfter} になります。`;
-    document.getElementById("announceText").textContent = announceText;
-
-    playAnnouncements(train);
+  function renderBoard() {
+    const board = document.getElementById("board");
+    board.innerHTML = "";
+    trains.forEach((t,i)=>{
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `
+        <div class="main">
+          <div class="track">${t.track}</div>
+          <div class="time">${t.time}</div>
+          <div class="type">${t.type}</div>
+          <div class="dest">${t.dest}</div>
+          <div class="note">${i===0 ? "まもなく" : ""}</div>
+        </div>
+        <div class="stops"><span class="scroll">この電車は ${t.type} ${t.dest} 行きです。 ${t.stops} の順に停まります。</span></div>
+      `;
+      board.appendChild(row);
+    });
   }
 
-  updateBoard();
-  setInterval(updateBoard, 120000); // 2分ごと更新
+  function announce(train) {
+    const msg = new SpeechSynthesisUtterance(
+      `まもなく ${train.track} に、${train.type} ${train.dest} 行きが発車します。`
+    );
+    msg.lang = "ja-JP";
+    speechSynthesis.speak(msg);
+  }
+
+  function tick() {
+    const departing = trains.shift(); // 発車
+    announce(departing);
+    const newTrain = randomTrain(20); // 新しい列車を追加
+    trains.push(newTrain);
+    renderBoard();
+  }
+
+  initBoard();
+  setInterval(tick, 120000); // 2分ごとに更新
 </script>
 </body>
 </html>
