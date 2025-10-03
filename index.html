@@ -13,42 +13,51 @@
     height: 100vh;
   }
   .display {
-    width: 95%;
+    width: 90%;
+    aspect-ratio: 4 / 1; /* 横長比率を固定 */
     background: black;
-    border: 8px solid #111;
-    padding: 20px;
-    text-align: left;
+    border: 6px solid #111;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
-  /* 種別は発光 */
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+  }
+  /* 種別は左、発光 */
   .type {
-    font-size: 5em;
+    font-size: 6vh;
     color: #fff;
     text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 32px #ccc;
-    display: inline-block;
     width: 30%;
   }
-  /* 行き先は普通の白文字 */
+  /* 行き先は右、大きめ */
   .destination {
-    font-size: 7em;
+    font-size: 10vh;
     color: #fff;
-    display: inline-block;
-    width: 60%;
+    width: 65%;
+    text-align: right;
   }
-  /* 英語は小さめ */
+  /* 英語表記は下に */
   .english {
-    font-size: 2.2em;
+    font-size: 3vh;
     color: #fff;
-    margin-left: 32%;
-    display: block;
+    text-align: right;
+    margin-top: -0.5em;
   }
 </style>
 </head>
 <body>
   <div class="display">
-    <span class="type">普通</span>
-    <span class="destination">大須</span>
+    <div class="row">
+      <span class="type">普通</span>
+      <span class="destination">大須</span>
+    </div>
     <span class="english">Osu</span>
   </div>
 </body>
 </html>
-
