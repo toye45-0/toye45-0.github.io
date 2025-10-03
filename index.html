@@ -39,7 +39,6 @@
   .note  { width: 20%; text-align: center; color: #0ff; animation: blink 1s infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* 停車駅スクロール */
   .stops {
     width: 100%;
     overflow: hidden;
@@ -56,6 +55,20 @@
     0%   { transform: translateX(0); }
     100% { transform: translateX(-100%); }
   }
+
+  .announce {
+    margin-top: 15px;
+    font-size: 3vh;
+    color: #ff0;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .announce span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-left 25s linear infinite;
+  }
 </style>
 </head>
 <body>
@@ -64,77 +77,75 @@
       <div class="main">
         <div class="track" id="track1">1番線</div>
         <div class="time"  id="time1">12:05</div>
-        <div class="type"  id="type1">急行</div>
-        <div class="dest"  id="dest1">豊橋</div>
+        <div class="type"  id="type1">普通</div>
+        <div class="dest"  id="dest1">名古屋</div>
         <div class="note"  id="note1">まもなく</div>
       </div>
-      <div class="stops"><span id="stops1" class="scroll">金山 → 神宮前 → 名古屋 → 国府 → 豊橋</span></div>
+      <div class="stops"><span id="stops1" class="scroll">知立 → 金山 → 神宮前 → 名古屋</span></div>
     </div>
-
-    <div class="row">
-      <div class="main">
-        <div class="track" id="track2">2番線</div>
-        <div class="time"  id="time2">12:15</div>
-        <div class="type"  id="type2">普通</div>
-        <div class="dest"  id="dest2">名古屋</div>
-        <div class="note"  id="note2"></div>
-      </div>
-      <div class="stops"><span id="stops2" class="scroll">知立 → 神宮前 → 金山 → 名古屋</span></div>
-    </div>
-
-    <div class="row">
-      <div class="main">
-        <div class="track" id="track3">3番線</div>
-        <div class="time"  id="time3">12:25</div>
-        <div class="type"  id="type3">特急</div>
-        <div class="dest"  id="dest3">犬山</div>
-        <div class="note"  id="note3"></div>
-      </div>
-      <div class="stops"><span id="stops3" class="scroll">金山 → 名古屋 → 栄生 → 岩倉 → 犬山</span></div>
-    </div>
+    <div class="announce"><span id="announceText"></span></div>
   </div>
 
 <script>
-  // 種別
-  const types = ["普通", "急行", "準急", "特急", "快速特急"];
-  // 行き先と停車駅
   const trains = [
-    {dest:"豊橋", stops:"金山 → 神宮前 → 名古屋 → 国府 → 豊橋"},
-    {dest:"名古屋", stops:"知立 → 神宮前 → 金山 → 名古屋"},
-    {dest:"犬山", stops:"金山 → 名古屋 → 栄生 → 岩倉 → 犬山"},
-    {dest:"中部国際空港", stops:"神宮前 → 太田川 → 常滑 → 中部国際空港"},
-    {dest:"吉良吉田", stops:"知立 → 知多半田 → 西尾 → 吉良吉田"}
+    {
+      dest:"名古屋",
+      typeBefore:"普通",
+      typeAfter:"急行",
+      changeStation:"金山",
+      stopsBefore:"知立 → 金山",
+      stopsAfter:"金山 → 神宮前 → 名古屋"
+    },
+    {
+      dest:"豊橋",
+      typeBefore:"普通",
+      typeAfter:"特急",
+      changeStation:"神宮前",
+      stopsBefore:"知立 → 神宮前",
+      stopsAfter:"神宮前 → 国府 → 豊橋"
+    }
   ];
 
-  function randomTrain() {
-    const t = trains[Math.floor(Math.random()*trains.length)];
-    return {
-      time: new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"}),
-      type: types[Math.floor(Math.random()*types.length)],
-      dest: t.dest,
-      stops: t.stops
-    };
+  function playAnnouncements(train) {
+    // 1. 最初
+    let msg1 = new SpeechSynthesisUtterance(`この電車は ${train.typeBefore} ${train.dest} 行きです。`);
+    msg1.lang = "ja-JP";
+    speechSynthesis.speak(msg1);
+
+    // 2. 種別変更アナウンス
+    let msg2 = new SpeechSynthesisUtterance(`${train.changeStation} からは ${train.typeAfter} になります。`);
+    msg2.lang = "ja-JP";
+    setTimeout(()=>speechSynthesis.speak(msg2), 4000);
+
+    // 3. 停車駅案内（前半）
+    let msg3 = new SpeechSynthesisUtterance(`${train.stopsBefore} に停まります。`);
+    msg3.lang = "ja-JP";
+    setTimeout(()=>speechSynthesis.speak(msg3), 7000);
+
+    // 4. 停車駅案内（後半）
+    let msg4 = new SpeechSynthesisUtterance(`${train.stopsAfter} の順に停まります。`);
+    msg4.lang = "ja-JP";
+    setTimeout(()=>speechSynthesis.speak(msg4), 10000);
   }
 
   function updateBoard() {
-    for (let i=1;i<=3;i++) {
-      const t = randomTrain();
-      document.getElementById("time"+i).textContent = t.time;
-      document.getElementById("type"+i).textContent = t.type;
-      document.getElementById("dest"+i).textContent = t.dest;
-      document.getElementById("stops"+i).textContent = t.stops;
-      document.getElementById("note"+i).textContent = (i===1) ? "まもなく" : "";
-    }
+    const train = trains[Math.floor(Math.random()*trains.length)];
+    const now = new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});
 
-    // アナウンス
-    const announce = `まもなく ${document.getElementById("track1").textContent}、${document.getElementById("type1").textContent}、${document.getElementById("dest1").textContent} 行きが発車します。`;
-    const msg = new SpeechSynthesisUtterance(announce);
-    msg.lang = "ja-JP";
-    speechSynthesis.speak(msg);
+    document.getElementById("time1").textContent = now;
+    document.getElementById("type1").textContent = train.typeBefore;
+    document.getElementById("dest1").textContent = train.dest;
+    document.getElementById("stops1").textContent =
+      train.stopsBefore + " → " + train.typeAfter + " (" + train.changeStation + "から) → " + train.stopsAfter;
+
+    const announceText = `この電車は ${train.typeBefore} ${train.dest} 行きです。 ${train.changeStation} から ${train.typeAfter} になります。`;
+    document.getElementById("announceText").textContent = announceText;
+
+    playAnnouncements(train);
   }
 
   updateBoard();
-  setInterval(updateBoard, 60000); // 1分ごと更新
+  setInterval(updateBoard, 120000); // 2分ごと更新
 </script>
 </body>
 </html>
