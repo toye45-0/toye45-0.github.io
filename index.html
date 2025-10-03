@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>行先表示シミュレーター</title>
+<style>
+  body {
+    margin: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .display {
+    width: 95%;
+    background: black;
+    border: 8px solid #111;
+    padding: 20px;
+    text-align: left;
+  }
+  /* 種別は発光 */
+  .type {
+    font-size: 5em;
+    color: #fff;
+    text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 32px #ccc;
+    display: inline-block;
+    width: 30%;
+  }
+  /* 行き先は普通の白文字 */
+  .destination {
+    font-size: 7em;
+    color: #fff;
+    display: inline-block;
+    width: 60%;
+  }
+  /* 英語は小さめ */
+  .english {
+    font-size: 2.2em;
+    color: #fff;
+    margin-left: 32%;
+    display: block;
+  }
+</style>
+</head>
+<body>
+  <div class="display">
+    <span class="type">普通</span>
+    <span class="destination">大須</span>
+    <span class="english">Osu</span>
+  </div>
+</body>
+</html>
 
