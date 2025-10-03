@@ -15,58 +15,104 @@
     height: 100vh;
   }
   .board {
-    width: 90%;
+    width: 95%;
     background: #111;
     border: 5px solid #333;
     padding: 20px;
   }
   .row {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     border-bottom: 2px solid #333;
     padding: 10px 0;
-    font-size: 4vh;
   }
-  .time { width: 20%; color: #0f0; text-align: center; }
-  .type { width: 20%; color: #ff0; text-align: center; }
-  .dest { width: 40%; text-align: left; }
-  .note { width: 20%; text-align: center; color: #0ff; animation: blink 1s infinite; }
+  .main {
+    display: flex;
+    justify-content: space-between;
+    font-size: 4vh;
+    align-items: center;
+  }
+  .track { width: 15%; color: #0f0; text-align: center; }
+  .time  { width: 15%; color: #0f0; text-align: center; }
+  .type  { width: 15%; color: #ff0; text-align: center; }
+  .dest  { width: 35%; text-align: left; font-size: 4.5vh; }
+  .note  { width: 20%; text-align: center; color: #0ff; animation: blink 1s infinite; }
   @keyframes blink { 50% { opacity: 0; } }
+
+  /* 停車駅スクロール */
+  .stops {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 2.5vh;
+    color: #ccc;
+  }
+  .scroll {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-left 20s linear infinite;
+  }
+  @keyframes scroll-left {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
 </style>
 </head>
 <body>
   <div class="board">
     <div class="row">
-      <div class="time" id="time1">12:05</div>
-      <div class="type" id="type1">急行</div>
-      <div class="dest" id="dest1">豊橋</div>
-      <div class="note" id="note1">まもなく</div>
+      <div class="main">
+        <div class="track" id="track1">1番線</div>
+        <div class="time"  id="time1">12:05</div>
+        <div class="type"  id="type1">急行</div>
+        <div class="dest"  id="dest1">豊橋</div>
+        <div class="note"  id="note1">まもなく</div>
+      </div>
+      <div class="stops"><span id="stops1" class="scroll">金山 → 神宮前 → 名古屋 → 国府 → 豊橋</span></div>
     </div>
+
     <div class="row">
-      <div class="time" id="time2">12:15</div>
-      <div class="type" id="type2">普通</div>
-      <div class="dest" id="dest2">名古屋</div>
-      <div class="note" id="note2"></div>
+      <div class="main">
+        <div class="track" id="track2">2番線</div>
+        <div class="time"  id="time2">12:15</div>
+        <div class="type"  id="type2">普通</div>
+        <div class="dest"  id="dest2">名古屋</div>
+        <div class="note"  id="note2"></div>
+      </div>
+      <div class="stops"><span id="stops2" class="scroll">知立 → 神宮前 → 金山 → 名古屋</span></div>
     </div>
+
     <div class="row">
-      <div class="time" id="time3">12:25</div>
-      <div class="type" id="type3">特急</div>
-      <div class="dest" id="dest3">犬山</div>
-      <div class="note" id="note3"></div>
+      <div class="main">
+        <div class="track" id="track3">3番線</div>
+        <div class="time"  id="time3">12:25</div>
+        <div class="type"  id="type3">特急</div>
+        <div class="dest"  id="dest3">犬山</div>
+        <div class="note"  id="note3"></div>
+      </div>
+      <div class="stops"><span id="stops3" class="scroll">金山 → 名古屋 → 栄生 → 岩倉 → 犬山</span></div>
     </div>
   </div>
 
 <script>
   // 種別
   const types = ["普通", "急行", "準急", "特急", "快速特急"];
-  // 行き先
-  const stations = ["名古屋","豊橋","犬山","新鵜沼","吉良吉田"];
+  // 行き先と停車駅
+  const trains = [
+    {dest:"豊橋", stops:"金山 → 神宮前 → 名古屋 → 国府 → 豊橋"},
+    {dest:"名古屋", stops:"知立 → 神宮前 → 金山 → 名古屋"},
+    {dest:"犬山", stops:"金山 → 名古屋 → 栄生 → 岩倉 → 犬山"},
+    {dest:"中部国際空港", stops:"神宮前 → 太田川 → 常滑 → 中部国際空港"},
+    {dest:"吉良吉田", stops:"知立 → 知多半田 → 西尾 → 吉良吉田"}
+  ];
 
   function randomTrain() {
+    const t = trains[Math.floor(Math.random()*trains.length)];
     return {
       time: new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"}),
       type: types[Math.floor(Math.random()*types.length)],
-      dest: stations[Math.floor(Math.random()*stations.length)]
+      dest: t.dest,
+      stops: t.stops
     };
   }
 
@@ -76,11 +122,12 @@
       document.getElementById("time"+i).textContent = t.time;
       document.getElementById("type"+i).textContent = t.type;
       document.getElementById("dest"+i).textContent = t.dest;
+      document.getElementById("stops"+i).textContent = t.stops;
       document.getElementById("note"+i).textContent = (i===1) ? "まもなく" : "";
     }
 
     // アナウンス
-    const announce = `まもなく ${document.getElementById("type1").textContent}、${document.getElementById("dest1").textContent} 行きが発車します。`;
+    const announce = `まもなく ${document.getElementById("track1").textContent}、${document.getElementById("type1").textContent}、${document.getElementById("dest1").textContent} 行きが発車します。`;
     const msg = new SpeechSynthesisUtterance(announce);
     msg.lang = "ja-JP";
     speechSynthesis.speak(msg);
