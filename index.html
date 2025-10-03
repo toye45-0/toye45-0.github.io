@@ -91,9 +91,36 @@
       if(Math.random() < 0.5){
         shortDest = stations[Math.floor(Math.random()*stations.length)];
       }
+      // 事故即アナウンス
+      announce({time, type, dest, track, stops, accident, shortDest});
     }
 
     return {time, type, dest, track, stops, accident, shortDest};
+  }
+
+  // アナウンス
+  function announce(train) {
+    if(train.accident && train.shortDest){
+      let msg = new SpeechSynthesisUtterance(
+        `お知らせします。${train.track} 発 ${train.type} ${train.dest} 行きは、人身事故の影響により ${train.shortDest} 止まりに変更となります。`
+      );
+      msg.lang = "ja-JP";
+      speechSynthesis.speak(msg);
+      return;
+    }
+    if(train.accident){
+      let msg = new SpeechSynthesisUtterance("ただいま人身事故のため運転を見合わせています。");
+      msg.lang = "ja-JP";
+      speechSynthesis.speak(msg);
+      return;
+    }
+
+    // 通常
+    let jp = new SpeechSynthesisUtterance(
+      `まもなく ${train.track} に、${train.type} ${train.dest} 行きが発車します。`
+    );
+    jp.lang = "ja-JP";
+    speechSynthesis.speak(jp);
   }
 
   // 初期化
@@ -154,36 +181,11 @@
     });
   }
 
-  // アナウンス
-  function announce(train) {
-    if(train.accident && train.shortDest){
-      let msg = new SpeechSynthesisUtterance(
-        `まもなく ${train.track} から発車する ${train.type} ${train.dest} 行きは、人身事故の影響により、${train.shortDest} 止まりに変更となります。`
-      );
-      msg.lang = "ja-JP";
-      speechSynthesis.speak(msg);
-      return;
-    }
-    if(train.accident){
-      let msg = new SpeechSynthesisUtterance("ただいま人身事故のため運転を見合わせています。");
-      msg.lang = "ja-JP";
-      speechSynthesis.speak(msg);
-      return;
-    }
-
-    // 通常
-    let jp = new SpeechSynthesisUtterance(
-      `まもなく ${train.track} に、${train.type} ${train.dest} 行きが発車します。`
-    );
-    jp.lang = "ja-JP";
-    speechSynthesis.speak(jp);
-  }
-
   // 発車処理
   function tick() {
-    const departing = trains.shift(); // 先頭の列車発車
+    const departing = trains.shift(); // 発車
     announce(departing);
-    const newTrain = randomTrain(20); // 新しい列車を追加
+    const newTrain = randomTrain(20); // 新列車
     trains.push(newTrain);
     renderBoard();
   }
