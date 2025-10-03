@@ -2,131 +2,92 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>名鉄風 行先表示シミュレーター</title>
+<title>駅 発車案内シミュレーター</title>
 <style>
   body {
     margin: 0;
     background: black;
+    color: #fff;
+    font-family: monospace;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
   }
-  .display {
+  .board {
     width: 90%;
-    aspect-ratio: 4 / 1;
-    background: black;
-    border: 6px solid #111;
-    padding: 10px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
+    background: #111;
+    border: 5px solid #333;
+    padding: 20px;
   }
   .row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    flex: 1;
+    border-bottom: 2px solid #333;
+    padding: 10px 0;
+    font-size: 4vh;
   }
-  /* 種別はLED発光風 */
-  .type {
-    font-size: 6vh;
-    color: #fff;
-    text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 32px #ccc;
-    width: 30%;
-  }
-  /* 行き先 */
-  .destination {
-    font-size: 10vh;
-    color: #fff;
-    width: 65%;
-    text-align: right;
-  }
-  /* 英語表記 */
-  .english {
-    font-size: 3vh;
-    color: #fff;
-    text-align: right;
-    margin-top: -0.5em;
-  }
-  /* 停車駅スクロール */
-  .scroll-container {
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    border-top: 2px solid #222;
-    margin-top: 5px;
-  }
-  .scroll-text {
-    display: inline-block;
-    font-size: 3.5vh;
-    color: #fff;
-    padding-left: 100%;
-    animation: scroll 25s linear infinite;
-  }
-  @keyframes scroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-100%); }
-  }
+  .time { width: 20%; color: #0f0; text-align: center; }
+  .type { width: 20%; color: #ff0; text-align: center; }
+  .dest { width: 40%; text-align: left; }
+  .note { width: 20%; text-align: center; color: #0ff; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
 </style>
 </head>
 <body>
-  <div class="display">
+  <div class="board">
     <div class="row">
-      <span class="type" id="type">普通</span>
-      <span class="destination" id="destination">名古屋</span>
+      <div class="time" id="time1">12:05</div>
+      <div class="type" id="type1">急行</div>
+      <div class="dest" id="dest1">豊橋</div>
+      <div class="note" id="note1">まもなく</div>
     </div>
-    <span class="english" id="english">Nagoya</span>
-    <div class="scroll-container">
-      <span class="scroll-text" id="scroll">停車駅： 金山 - 神宮前 - 知立 - 新安城 - 名古屋</span>
+    <div class="row">
+      <div class="time" id="time2">12:15</div>
+      <div class="type" id="type2">普通</div>
+      <div class="dest" id="dest2">名古屋</div>
+      <div class="note" id="note2"></div>
+    </div>
+    <div class="row">
+      <div class="time" id="time3">12:25</div>
+      <div class="type" id="type3">特急</div>
+      <div class="dest" id="dest3">犬山</div>
+      <div class="note" id="note3"></div>
     </div>
   </div>
 
 <script>
-  // 種別候補
+  // 種別
   const types = ["普通", "急行", "準急", "特急", "快速特急"];
+  // 行き先
+  const stations = ["名古屋","豊橋","犬山","新鵜沼","吉良吉田"];
 
-  // 行先候補（サンプル）
-  const stations = [
-    { jp: "名古屋", en: "Nagoya", stops: "金山 - 神宮前 - 知立 - 新安城 - 名古屋" },
-    { jp: "豊橋", en: "Toyohashi", stops: "東岡崎 - 美合 - 本宿 - 伊奈 - 豊橋" },
-    { jp: "犬山", en: "Inuyama", stops: "名古屋 - 栄生 - 江南 - 扶桑 - 犬山" },
-    { jp: "新鵜沼", en: "Shin-Unuma", stops: "名古屋 - 名鉄岐阜 - 各務原市役所前 - 新鵜沼" },
-    { jp: "吉良吉田", en: "Kira Yoshida", stops: "知立 - 西尾 - 吉良吉田" }
-  ];
-
-  // ランダム切り替え
-  function updateDisplay() {
-    const randomType = types[Math.floor(Math.random() * types.length)];
-    const randomStation = stations[Math.floor(Math.random() * stations.length)];
-
-    document.getElementById("type").textContent = randomType;
-    document.getElementById("destination").textContent = randomStation.jp;
-    document.getElementById("english").textContent = randomStation.en;
-    document.getElementById("scroll").textContent = "停車駅： " + randomStation.stops;
-
-    // アナウンス（日本語＋英語ランダム）
-    const messages = [
-      `この電車は、${randomType}、${randomStation.jp} 行きです。`,
-      `This is the ${randomType} train bound for ${randomStation.en}.`
-    ];
-    const msg = new SpeechSynthesisUtterance(messages[Math.floor(Math.random() * messages.length)]);
-    msg.lang = Math.random() > 0.5 ? "ja-JP" : "en-US";
-    speechSynthesis.speak(msg);
-
-    // 低確率で人身事故イベント
-    if (Math.random() < 0.0001) {
-      const delayMsg = new SpeechSynthesisUtterance("人身事故のため運転を見合わせています。");
-      delayMsg.lang = "ja-JP";
-      speechSynthesis.speak(delayMsg);
-    }
+  function randomTrain() {
+    return {
+      time: new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"}),
+      type: types[Math.floor(Math.random()*types.length)],
+      dest: stations[Math.floor(Math.random()*stations.length)]
+    };
   }
 
-  // 初期表示
-  updateDisplay();
-  // 60秒ごとに切り替え
-  setInterval(updateDisplay, 60000);
+  function updateBoard() {
+    for (let i=1;i<=3;i++) {
+      const t = randomTrain();
+      document.getElementById("time"+i).textContent = t.time;
+      document.getElementById("type"+i).textContent = t.type;
+      document.getElementById("dest"+i).textContent = t.dest;
+      document.getElementById("note"+i).textContent = (i===1) ? "まもなく" : "";
+    }
+
+    // アナウンス
+    const announce = `まもなく ${document.getElementById("type1").textContent}、${document.getElementById("dest1").textContent} 行きが発車します。`;
+    const msg = new SpeechSynthesisUtterance(announce);
+    msg.lang = "ja-JP";
+    speechSynthesis.speak(msg);
+  }
+
+  updateBoard();
+  setInterval(updateBoard, 60000); // 1分ごと更新
 </script>
 </body>
 </html>
