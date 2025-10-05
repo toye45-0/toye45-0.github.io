@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ブレインロット・オフィシャル窓口</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans JP', sans-serif;
+      background: radial-gradient(circle at center, #1a0000 0%, #000000 80%);
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 40px 0 10px;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      letter-spacing: 0.1em;
+      color: #ff3333;
+      text-shadow: 0 0 15px #ff0000;
+    }
+
+    .dev-banner {
+      display: inline-block;
+      background: linear-gradient(90deg, #ff0000, #ff6600);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-top: 10px;
+      box-shadow: 0 0 10px #ff4444;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .ai-msg {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 10px #ff3333;
+      line-height: 1.7em;
+    }
+
+    .button {
+      background: linear-gradient(45deg, #ff0000, #ff5555);
+      border: none;
+      padding: 15px 40px;
+      border-radius: 50px;
+      color: #fff;
+      font-size: 1.1em;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff3333;
+      transition: 0.3s;
+      margin-top: 30px;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ff6666;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    .glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(255,0,0,0.1), transparent 70%);
+      animation: pulse 3s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.3; }
+      to { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+  <header>
+    <h1>🧠 ブレインロット・オフィシャル窓口</h1>
+    <div class="dev-banner">🎮 現在、ゲーム開発に全力を尽くしております！</div>
+  </header>
+
+  <div class="ai-msg" id="aiMessage">
+    【自動応答】<br>
+    こちらはブレインロット公式窓口です。<br>
+    現在、開発チーム・admin担当者が対応準備中です。<br><br>
+    お問い合わせ内容を確認次第、AIを通じて担当者にお繋ぎいたします。<br>
+    ご相談・通報は以下の公式DMまでお寄せください。
+  </div>
+
+  <button class="button" onclick="window.open('https://x.com/toye163451', '_blank')">
+    X（旧Twitter）公式DMへアクセス
+  </button>
+
+  <footer>© 2025 BrainRot Official Window</footer>
+
+  <script>
+    // 自動アナウンス
+    window.addEventListener('load', () => {
+      const msg = new SpeechSynthesisUtterance("こちらはブレインロット公式窓口です。現在、ゲーム開発および管理担当者が対応中です。お問い合わせ内容を確認次第、AIを通じて担当者にお繋ぎいたします。ご相談はXのダイレクトメッセージまでお寄せください。");
+      msg.lang = 'ja-JP';
+      msg.rate = 1.0;
+      msg.pitch = 1.0;
+      speechSynthesis.speak(msg);
+    });
+  </script>
+</body>
+</html>
 
