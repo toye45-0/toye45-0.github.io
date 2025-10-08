@@ -68,11 +68,13 @@
   </header>
 
   <div class="container">
+    <!-- 通常表示 -->
     <div class="time-box" id="normal-box">
       <h2>🕒 対応時間帯</h2>
       <p id="time-text"></p>
     </div>
 
+    <!-- 見合わせ中表示 -->
     <div class="alert-box" id="alert-box">
       🚫 ただいま対応見合わせ中です<br>
       しばらくしてから再度アクセスしてください
@@ -84,7 +86,7 @@
   </footer>
 
   <script>
-    // 簡易祝日リスト（月/日形式）
+    // 簡易祝日リスト（例: 月/日形式）
     const holidays = ["1/1","2/11","4/29","5/3","5/4","5/5","11/3","11/23"];
 
     function isHoliday(date) {
@@ -153,7 +155,7 @@
     }
 
     checkTime();
-    setInterval(checkTime, 60000);
+    setInterval(checkTime, 60000); // 1分ごと自動更新
   </script>
 </body>
 </html>
