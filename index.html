@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Toye 対応状況</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1e90ff;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .time-box {
+      background: #e8f4ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 5px solid #1e90ff;
+    }
+    .time-box h2 {
+      margin: 0 0 8px;
+      font-size: 1.2em;
+      color: #1e90ff;
+    }
+    .time-box p {
+      margin: 0;
+      font-size: 1em;
+      line-height: 1.6em;
+    }
+    .alert-box {
+      background: #ffe4e4;
+      color: #d80000;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      display: none; /* 初期は非表示 */
+      font-size: 1.1em;
+      border-left: 5px solid #d80000;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      color: #888;
+      font-size: 0.9em;
+    }
+    .btn-area {
+      text-align: center;
+      margin-top: 10px;
+    }
+    button {
+      background: #1e90ff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0d6efd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Toye 対応状況
+  </header>
 
+  <div class="container">
+    <!-- 対応時間帯表示 -->
+    <div class="time-box" id="normal-box">
+      <h2>🕒 対応時間帯</h2>
+      <p>
+        午前： 5:00 ～ 8:16<br>
+        午後： 15:42 ～ 19:40<br>
+        夜間： 19:40 ～ 22:00
+      </p>
+    </div>
+
+    <!-- 見合わせ中表示 -->
+    <div class="alert-box" id="alert-box">
+      🚫 ただいま対応見合わせ中です<br>
+      しばらくしてから再度アクセスしてください
+    </div>
+
+    <!-- 手動でタイマー開始するボタン -->
+    <div class="btn-area">
+      <button onclick="startTimer()">対応開始（15分後に見合わせ表示）</button>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Toye Support
+  </footer>
+
+  <script>
+    let timer;
+    function startTimer() {
+      clearTimeout(timer);
+      document.getElementById("normal-box").style.display = "block";
+      document.getElementById("alert-box").style.display = "none";
+
+      // 15分（900,000ミリ秒）後に表示切り替え
+      timer = setTimeout(() => {
+        document.getElementById("normal-box").style.display = "none";
+        document.getElementById("alert-box").style.display = "block";
+      }, 900000);
+    }
+  </script>
+</body>
+</html>
