@@ -50,7 +50,7 @@
       padding: 15px;
       border-radius: 8px;
       text-align: center;
-      display: none; /* 初期は非表示 */
+      display: none;
       font-size: 1.1em;
       border-left: 5px solid #d80000;
     }
@@ -59,22 +59,6 @@
       padding: 10px;
       color: #888;
       font-size: 0.9em;
-    }
-    .btn-area {
-      text-align: center;
-      margin-top: 10px;
-    }
-    button {
-      background: #1e90ff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 1em;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0d6efd;
     }
   </style>
 </head>
@@ -99,11 +83,6 @@
       🚫 ただいま対応見合わせ中です<br>
       しばらくしてから再度アクセスしてください
     </div>
-
-    <!-- 手動でタイマー開始するボタン -->
-    <div class="btn-area">
-      <button onclick="startTimer()">対応開始（15分後に見合わせ表示）</button>
-    </div>
   </div>
 
   <footer>
@@ -111,18 +90,48 @@
   </footer>
 
   <script>
-    let timer;
-    function startTimer() {
-      clearTimeout(timer);
-      document.getElementById("normal-box").style.display = "block";
-      document.getElementById("alert-box").style.display = "none";
+    // 対応時間帯を定義（24時間表記で）
+    const schedule = [
+      { start: "05:00", end: "08:16" },
+      { start: "15:42", end: "19:40" },
+      { start: "19:40", end: "22:00" }
+    ];
 
-      // 15分（900,000ミリ秒）後に表示切り替え
-      timer = setTimeout(() => {
-        document.getElementById("normal-box").style.display = "none";
-        document.getElementById("alert-box").style.display = "block";
-      }, 900000);
+    function checkTime() {
+      const now = new Date();
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      let inSchedule = false;
+
+      schedule.forEach(slot => {
+        const [sh, sm] = slot.start.split(":").map(Number);
+        const [eh, em] = slot.end.split(":").map(Number);
+        const startMinutes = sh * 60 + sm;
+        const endMinutes = eh * 60 + em;
+        if (nowMinutes >= startMinutes && nowMinutes <= endMinutes) {
+          inSchedule = true;
+        }
+      });
+
+      const normalBox = document.getElementById("normal-box");
+      const alertBox = document.getElementById("alert-box");
+
+      if (inSchedule) {
+        // 対応時間内 → 15分後に見合わせ中に切り替え
+        normalBox.style.display = "block";
+        alertBox.style.display = "none";
+        setTimeout(() => {
+          normalBox.style.display = "none";
+          alertBox.style.display = "block";
+        }, 900000); // 15分 = 900,000 ms
+      } else {
+        // 対応時間外 → 常に非表示
+        normalBox.style.display = "none";
+        alertBox.style.display = "none";
+      }
     }
+
+    checkTime(); // ページ読み込み時に判定
+    setInterval(checkTime, 60000); // 1分ごとに自動判定
   </script>
 </body>
 </html>
