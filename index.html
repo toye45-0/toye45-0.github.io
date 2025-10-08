@@ -68,17 +68,11 @@
   </header>
 
   <div class="container">
-    <!-- 対応時間帯表示 -->
     <div class="time-box" id="normal-box">
       <h2>🕒 対応時間帯</h2>
-      <p>
-        午前： 5:00 ～ 8:16<br>
-        午後： 15:42 ～ 19:40<br>
-        夜間： 19:40 ～ 22:00
-      </p>
+      <p id="time-text"></p>
     </div>
 
-    <!-- 見合わせ中表示 -->
     <div class="alert-box" id="alert-box">
       🚫 ただいま対応見合わせ中です<br>
       しばらくしてから再度アクセスしてください
@@ -90,19 +84,52 @@
   </footer>
 
   <script>
-    // 対応時間帯を定義（24時間表記で）
-    const schedule = [
-      { start: "05:00", end: "08:16" },
-      { start: "15:42", end: "19:40" },
-      { start: "19:40", end: "22:00" }
-    ];
+    // 簡易祝日リスト（月/日形式）
+    const holidays = ["1/1","2/11","4/29","5/3","5/4","5/5","11/3","11/23"];
+
+    function isHoliday(date) {
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return holidays.includes(`${month}/${day}`);
+    }
+
+    function getSchedule(date) {
+      if (isHoliday(date)) {
+        return { slots: [{ start: "05:00", end: "23:00" }], text: "祝日： 5:00 ～ 23:00" };
+      }
+
+      const day = date.getDay(); // 0:日曜, 6:土曜
+      if (day === 0 || day === 6) {
+        // 土日
+        return { slots: [
+          { start: "09:00", end: "12:40" },
+          { start: "12:40", end: "18:00" },
+          { start: "18:00", end: "22:00" }
+        ], text: "土日： 9:00～12:40<br>12:40～18:00<br>18:00～22:00" };
+      }
+
+      // 平日
+      return { slots: [
+        { start: "05:00", end: "08:16" },
+        { start: "15:42", end: "19:40" },
+        { start: "19:40", end: "22:00" }
+      ], text: "平日： 5:00～8:16<br>15:42～19:40<br>19:40～22:00" };
+    }
 
     function checkTime() {
       const now = new Date();
       const nowMinutes = now.getHours() * 60 + now.getMinutes();
-      let inSchedule = false;
 
-      schedule.forEach(slot => {
+      const normalBox = document.getElementById("normal-box");
+      const alertBox = document.getElementById("alert-box");
+      const timeText = document.getElementById("time-text");
+
+      const scheduleObj = getSchedule(now);
+      const slots = scheduleObj.slots;
+      timeText.innerHTML = scheduleObj.text;
+
+      let inSchedule = false;
+      slots.forEach(slot => {
         const [sh, sm] = slot.start.split(":").map(Number);
         const [eh, em] = slot.end.split(":").map(Number);
         const startMinutes = sh * 60 + sm;
@@ -112,26 +139,21 @@
         }
       });
 
-      const normalBox = document.getElementById("normal-box");
-      const alertBox = document.getElementById("alert-box");
-
       if (inSchedule) {
-        // 対応時間内 → 15分後に見合わせ中に切り替え
         normalBox.style.display = "block";
         alertBox.style.display = "none";
         setTimeout(() => {
           normalBox.style.display = "none";
           alertBox.style.display = "block";
-        }, 900000); // 15分 = 900,000 ms
+        }, 900000); // 15分
       } else {
-        // 対応時間外 → 常に非表示
         normalBox.style.display = "none";
         alertBox.style.display = "none";
       }
     }
 
-    checkTime(); // ページ読み込み時に判定
-    setInterval(checkTime, 60000); // 1分ごとに自動判定
+    checkTime();
+    setInterval(checkTime, 60000);
   </script>
 </body>
 </html>
