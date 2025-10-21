@@ -1,1 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="adsTEAMのサイバーセキュリティ教育とAWS障害解説">
+    <title>adsTEAM - サイバーセキュリティ教育チーム</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #007BFF; color: white; padding: 1rem; text-align: center; }
+        nav ul { list-style: none; padding: 0; }
+        nav ul li { display: inline; margin: 0 1rem; }
+        nav ul li a { color: white; text-decoration: none; }
+        .hero { background-color: #007BFF; color: white; text-align: center; padding: 4rem 2rem; }
+        .hero h1 { font-size: 2.5rem; }
+        .cta { background-color: #28a745; color: white; padding: 0.5rem 1rem; text-decoration: none; border-radius: 5px; }
+        section { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .activities, .aws-outage { background-color: white; }
+        .attack-type, .outage-details { margin: 1rem 0; padding: 1rem; border-left: 4px solid #007BFF; }
+        .attack-type h3, .outage-details h3 { color: #007BFF; }
+        footer { background-color: #333; color: white; text-align: center; padding: 1rem; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>adsTEAM</h2>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#activities">Activities</a></li>
+                <li><a href="#aws-outage">AWS障害解説</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
+    <section id="home" class="hero">
+        <h1>サイバー攻撃を理解し、防ぐ</h1>
+        <p>adsTEAMは、サイバーセキュリティの脅威を教育し、最新のクラウド障害を解説します。</p>
+        <a href="#activities" class="cta">活動内容を見る</a>
+        <a href="#aws-outage" class="cta" style="margin-left: 1rem;">AWS障害解説</a>
+    </section>
+
+    <section id="about" class="activities">
+        <h2>About adsTEAM</h2>
+        <p>adsTEAMは、サイバーセキュリティの専門家からなるチームです。ミッション: サイバー攻撃の仕組みをわかりやすく解説し、予防策を広める。最新のクラウド障害の分析も提供します。メンバー: セキュリティエンジニア、教育者、研究者。</p>
+    </section>
+
+    <section id="activities" class="activities">
+        <h2>活動内容: サイバー攻撃の仕組み</h2>
+        <p>私たちの主な活動は、サイバー攻撃の基礎を学ぶワークショップとオンラインコンテンツの提供です。以下に、主な攻撃タイプの仕組みを簡潔に解説します。</p>
+        
+        <div class="attack-type">
+            <h3>1. フィッシング攻撃</h3>
+            <p><strong>仕組み</strong>: 偽のメールやサイトで個人情報を騙し取る。例: 銀行を装ったリンクをクリックさせ、パスワードを入力させる。<br>
+            <strong>ステップ</strong>: 1. 標的選定 → 2. 偽装メッセージ送信 → 3. 情報収集 → 4. 悪用。<br>
+            <strong>対策</strong>: URL確認、2要素認証。</p>
+        </div>
+        
+        <div class="attack-type">
+            <h3>2. ランサムウェア</h3>
+            <p><strong>仕組み</strong>: マルウェアでファイルを暗号化し、復号キーを金銭で要求。感染経路: 添付ファイルや脆弱性悪用。<br>
+            <strong>ステップ</strong>: 1. 侵入 → 2. 暗号化 → 3. 身代金要求。<br>
+            <strong>対策</strong>: 定期バックアップ、ソフトウェア更新。</p>
+        </div>
+        
+        <div class="attack-type">
+            <h3>3. DDoS攻撃</h3>
+            <p><strong>仕組み</strong>: 多数の偽トラフィックでサーバーを過負荷にし、サービス停止させる。<br>
+            <strong>ステップ</strong>: 1. ボットネット構築 → 2. 同時アクセス洪水 → 3. システムダウン。<br>
+            <strong>対策</strong>: ファイアウォール、CDN使用。</p>
+        </div>
+        
+        <p>詳細な資料はワークショップで配布。参加お待ちしています！</p>
+    </section>
+
+    <section id="aws-outage" class="aws-outage">
+        <h2>2025年10月20日 AWS障害の徹底解説</h2>
+        <p>2025年10月20日16時頃（JST）に発生したAWSの大規模障害について、adsTEAMが詳細に解説します。US-EAST-1リージョンでのDNS解決失敗が原因で、世界中のサービスに影響が及びました。</p>
+        
+        <div class="outage-details">
+            <h3>1. 障害の概要</h3>
+            <p><strong>発生日時</strong>: 2025年10月20日16:00頃（JST）。<br>
+            <strong>影響範囲</strong>: Snapchat、Reddit、Fortnite、Venmoなど500以上のサービスがダウン。ユーザー数百万人がアクセス不能に。<br>
+            <strong>原因</strong>: US-EAST-1の内部ネットワーク監視サブシステムのバグによるDNS解決失敗。サイバー攻撃ではない。</p>
+        </div>
+        
+        <div class="outage-details">
+            <h3>2. タイムライン</h3>
+            <p><strong>16:00</strong>: エラーレート急増（DynamoDB、EC2、S3影響）。<br>
+            <strong>17:00-19:00</strong>: 影響ピーク。DownDetectorに数千件の報告。<br>
+            <strong>20:00</strong>: AWSが原因特定、部分回復開始。<br>
+            <strong>23:00</strong>: 大部分回復。翌日フル回復。</p>
+        </div>
+        
+        <div class="outage-details">
+            <h3>3. 影響と教訓</h3>
+            <p><strong>影響</strong>: ソーシャル、ゲーム、金融など多岐にわたり、数億ドルの経済損失。例: Snapchatのログイン障害、航空予約システム停止。<br>
+            <strong>教訓</strong>: マルチリージョン/マルチクラウド採用、バックアップ強化、ユーザー向けオフライン代替準備。<br>
+            <strong>対策</strong>: AWSは再発防止策を発表。企業はフェイルオーバーシステム導入を推奨。</p>
+        </div>
+        
+        <p>詳細な分析や対策ワークショップは今後開催予定。最新情報はブログでチェック！</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form style="max-width: 400px; margin: 0 auto;">
+            <label>お名前: <input type="text" required></label><br><br>
+            <label>メール: <input type="email" required></label><br><br>
+            <label>メッセージ: <textarea required></textarea></label><br><br>
+            <button type="submit" class="cta">送信</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 adsTEAM. All rights reserved. | <a href="#" style="color: #ccc;">プライバシーポリシー</a></p>
+    </footer>
+
+    <script>
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
