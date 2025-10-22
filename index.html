@@ -1,149 +1,85 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS & サービス障害情報サイト</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #232f3e;
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-        }
-        main {
-            padding: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #eee;
-        }
-        .status-normal { background-color: #d4edda; }  /* 緑 */
-        .status-warning { background-color: #fff3cd; } /* 黄 */
-        .status-error { background-color: #f8d7da; }   /* 赤 */
-        .timeline {
-            margin-top: 20px;
-        }
-        footer {
-            background-color: #232f3e;
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AWS障害情報＋コメント共有</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; }
+    header { background: #232f3e; color: white; text-align: center; padding: 15px; }
+    main { padding: 20px; max-width: 800px; margin: auto; }
+    #comments { background: #fff; padding: 15px; border-radius: 8px; margin-top: 20px; }
+    .comment { border-bottom: 1px solid #ddd; padding: 10px 0; }
+    .comment:last-child { border-bottom: none; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 8px; }
+    button { margin-top: 10px; background: #0073bb; color: #fff; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; }
+    button:hover { background: #005b99; }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>AWS 障害情報</h1>
+    <p>リアルタイムコメント機能付き</p>
+  </header>
 
-<header>
-    <h1>AWS & サービス障害情報サイト</h1>
-    <p>リージョン・サービス別のステータスを確認できます</p>
-</header>
+  <main>
+    <h2>2025年10月20日 アメリカ サービス障害（現在：復旧済み ✅）</h2>
 
-<main>
-    <h2>AWSサービス状況ダッシュボード</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>サービス</th>
-                <th>東京</th>
-                <th>オレゴン</th>
-                <th>バージニア</th>
-                <th>ユーザーコメント</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>EC2</td>
-                <td class="status-normal">✅ 正常</td>
-                <td class="status-normal">✅ 正常</td>
-                <td class="status-normal">✅ 正常</td>
-                <td>0件</td>
-            </tr>
-            <tr>
-                <td>S3</td>
-                <td class="status-normal">✅ 正常</td>
-                <td class="status-normal">✅ 正常</td>
-                <td class="status-normal">✅ 正常</td>
-                <td>0件</td>
-            </tr>
-            <tr>
-                <td>RDS</td>
-                <td class="status-normal">✅ 正常</td>
-                <td class="status-normal">✅ 正常</td>
-                <td class="status-normal">✅ 正常</td>
-                <td>0件</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="timeline">
-        <h2>2025年10月20日 アメリカ停電・サービス障害（復旧済み）</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>地域</th>
-                    <th>サービス</th>
-                    <th>状態 / 内容</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>アメリカ</td>
-                    <td>Fortnite</td>
-                    <td class="status-normal">✅ 復旧済み</td>
-                </tr>
-                <tr>
-                    <td>アメリカ</td>
-                    <td>Roblox</td>
-                    <td class="status-normal">✅ 復旧済み</td>
-                </tr>
-                <tr>
-                    <td>アメリカ</td>
-                    <td>Nintendo</td>
-                    <td class="status-normal">✅ 復旧済み</td>
-                </tr>
-                <tr>
-                    <td>アメリカ</td>
-                    <td>Zoom</td>
-                    <td class="status-normal">✅ 復旧済み</td>
-                </tr>
-                <tr>
-                    <td>アメリカ</td>
-                    <td>その他オンラインサービス（AWS依存）</td>
-                    <td class="status-normal">✅ 復旧済み</td>
-                </tr>
-            </tbody>
-        </table>
+    <div id="comments">
+      <h3>💬 コメント欄（みんな見れる）</h3>
+      <div id="commentList"></div>
+      <input type="text" id="username" placeholder="名前（任意）" />
+      <textarea id="commentText" placeholder="コメントを入力..." rows="3"></textarea>
+      <button onclick="sendComment()">送信</button>
     </div>
+  </main>
 
-    <div class="notifications">
-        <h2>通知設定</h2>
-        <ul>
-            <li>Discord Webhook登録</li>
-            <li>Twitter自動投稿設定</li>
-            <li>メール通知設定</li>
-        </ul>
-    </div>
-</main>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database-compat.js"></script>
 
-<footer>
-    <p>&copy; 2025 AWS & サービス障害情報サイト</p>
-</footer>
+  <script>
+    // 🔸 Firebase設定（あなたのプロジェクトの値に置き換え）
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
+    // Firebase初期化
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const commentList = document.getElementById("commentList");
+
+    // 🔸 コメント送信
+    function sendComment() {
+      const name = document.getElementById("username").value || "名無し";
+      const text = document.getElementById("commentText").value;
+      if (!text) return;
+
+      const newCommentRef = db.ref("comments").push();
+      newCommentRef.set({
+        name: name,
+        text: text,
+        time: new Date().toLocaleString()
+      });
+
+      document.getElementById("commentText").value = "";
+    }
+
+    // 🔸 コメントをリアルタイム取得
+    db.ref("comments").on("child_added", (snapshot) => {
+      const data = snapshot.val();
+      const div = document.createElement("div");
+      div.className = "comment";
+      div.innerHTML = `<strong>${data.name}</strong> <small>${data.time}</small><br>${data.text}`;
+      commentList.appendChild(div);
+    });
+  </script>
 </body>
 </html>
