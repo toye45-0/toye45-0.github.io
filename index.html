@@ -1,145 +1,81 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TogetherBot 公式サイト</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: "Noto Sans JP", sans-serif;
-      background: #0d1117;
-      color: #f5f5f5;
-      text-align: center;
-    }
-
-    /* 🔹スクロールバナー */
-    .scroll-banner {
-      background: #ff4444;
-      color: white;
-      padding: 10px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      font-weight: bold;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-
-    .scroll-banner span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll 15s linear infinite;
-    }
-
-    @keyframes scroll {
-      from { transform: translateX(0%); }
-      to { transform: translateX(-100%); }
-    }
-
-    header {
-      background: linear-gradient(135deg, #5865f2, #4b59c0);
-      padding: 80px 20px;
-      color: white;
-    }
-
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-    }
-
-    .btn {
-      display: inline-block;
-      background: #7289da;
-      color: white;
-      padding: 15px 30px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #5b6eae;
-      transform: scale(1.05);
-    }
-
-    .features {
-      padding: 60px 20px;
-    }
-
-    .cards {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .card {
-      background: #161b22;
-      padding: 20px;
-      border-radius: 15px;
-      width: 250px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    }
-
-    .invite {
-      background: #1f2937;
-      padding: 60px 20px;
-    }
-
-    .btn.large {
-      font-size: 1.2rem;
-      padding: 20px 40px;
-    }
-
-    footer {
-      padding: 20px;
-      font-size: 0.9rem;
-      background: #0b0f14;
-      color: #aaa;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TogetherBot 公式サイト</title>
+<style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background-color:#f4f4f4; color:#333; }
+  header { background-color:#4a90e2; color:white; padding:20px 0; text-align:center; }
+  header h1 { margin:0; font-size:2em; }
+  nav { margin-top:10px; }
+  nav a { color:white; text-decoration:none; margin:0 15px; font-weight:bold; }
+  .banner { background-color:#333; color:white; padding:10px 0; overflow:hidden; white-space:nowrap; }
+  .banner span { display:inline-block; padding-left:100%; animation: scroll 15s linear infinite; }
+  @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+  section { padding:40px 20px; max-width:900px; margin:auto; }
+  section h2 { color:#4a90e2; }
+  .info-table { width:100%; border-collapse:collapse; margin-top:20px; }
+  .info-table th, .info-table td { border:1px solid #ccc; padding:10px; text-align:left; }
+  footer { text-align:center; padding:20px; background-color:#222; color:white; }
+</style>
 </head>
 <body>
-  <!-- 🔔 スクロールバナー -->
-  <div class="scroll-banner">
-    <span>⚠️ 導入時は管理者ロールを渡してからご利用ください ⚠️ 導入時は管理者ロールを渡してからご利用ください ⚠️</span>
-  </div>
 
-  <header>
-    <h1>TogetherBot</h1>
-    <p>あなたのDiscordサーバーを、もっと便利に。</p>
-    <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&scope=bot" class="btn">Botを招待</a>
-  </header>
+<header>
+  <h1>TogetherBot 公式サイト</h1>
+  <nav>
+    <a href="#about">概要</a>
+    <a href="#setup">導入手順</a>
+    <a href="#details">詳細情報</a>
+    <a href="#support">サポート</a>
+  </nav>
+</header>
 
-  <section class="features">
-    <h2>主な機能</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>✅ 認証システム</h3>
-        <p>荒らし対策やメンバー認証を自動化。</p>
-      </div>
-      <div class="card">
-        <h3>⚙️ サーバー管理</h3>
-        <p>ロール付与、BAN、ログ記録などを簡単に。</p>
-      </div>
-      <div class="card">
-        <h3>📊 情報コマンド</h3>
-        <p>ユーザー・サーバー情報を一発取得。</p>
-      </div>
-    </div>
-  </section>
+<div class="banner">
+  <span>導入時は管理者ロールを渡してからご利用ください！ 🚀 TogetherBotでサーバーのロール認証を簡単に！</span>
+</div>
 
-  <section class="invite">
-    <h2>導入はこちらから</h2>
-    <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&scope=bot" class="btn large">Botを導入する</a>
-  </section>
+<section id="about">
+  <h2>概要</h2>
+  <p>TogetherBotはDiscordサーバーのロール認証・モデレーション・ユーティリティ機能を備えた公式Botです。  
+  誰でも簡単に導入でき、管理者向けコマンドも豊富に搭載しています。</p>
+</section>
 
-  <footer>
-    <p>© 2025 TogetherBot | Developed by jpfo</p>
-  </footer>
+<section id="setup">
+  <h2>導入手順</h2>
+  <ol>
+    <li>下のリンクからBotをサーバーに招待します（管理者権限必須）</li>
+    <li>導入後、Botに管理者ロールまたは必要な権限を付与します</li>
+    <li>ログチャンネル設定や認証パネルを作成してご利用ください</li>
+  </ol>
+  <p>
+    <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&integration_type=0&scope=bot" target="_blank">
+      🔗 Botをサーバーに招待
+    </a>
+  </p>
+</section>
+
+<section id="details">
+  <h2>詳細情報</h2>
+  <table class="info-table">
+    <tr><th>機能</th><th>説明</th></tr>
+    <tr><td>ロール認証</td><td>ボタン1つで指定ロールを付与。サーバールール同意の確認にも最適。</td></tr>
+    <tr><td>モデレーション</td><td>キック・BAN・タイムアウト・メッセージ削除などを管理者コマンドで操作可能。</td></tr>
+    <tr><td>ユーティリティ</td><td>ユーザー情報表示、サーバー情報表示、アバター表示、サイコロ・コイントス・今日の運勢など。</td></tr>
+    <tr><td>稼働情報</td><td>稼働時間、CPU/メモリ使用率、導入サーバー数などを簡単に確認可能。</td></tr>
+  </table>
+</section>
+
+<section id="support">
+  <h2>サポート</h2>
+  <p>現在、サポートサーバーは準備中です。公開までしばらくお待ちください。</p>
+  <p>ご質問やご要望は、今後設置予定の公式お問い合わせフォームから受け付けます。</p>
+</section>
+
+<footer>
+  <p>© 2025 TogetherBot 公式サイト | All Rights Reserved</p>
+</footer>
+
 </body>
 </html>
