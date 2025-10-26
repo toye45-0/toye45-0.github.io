@@ -1,81 +1,140 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TogetherBot 公式サイト</title>
-<style>
-  body { font-family: Arial, sans-serif; margin:0; padding:0; background-color:#f4f4f4; color:#333; }
-  header { background-color:#4a90e2; color:white; padding:20px 0; text-align:center; }
-  header h1 { margin:0; font-size:2em; }
-  nav { margin-top:10px; }
-  nav a { color:white; text-decoration:none; margin:0 15px; font-weight:bold; }
-  .banner { background-color:#333; color:white; padding:10px 0; overflow:hidden; white-space:nowrap; }
-  .banner span { display:inline-block; padding-left:100%; animation: scroll 15s linear infinite; }
-  @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-  section { padding:40px 20px; max-width:900px; margin:auto; }
-  section h2 { color:#4a90e2; }
-  .info-table { width:100%; border-collapse:collapse; margin-top:20px; }
-  .info-table th, .info-table td { border:1px solid #ccc; padding:10px; text-align:left; }
-  footer { text-align:center; padding:20px; background-color:#222; color:white; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherBot 公式サイト</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+        header {
+            background-color: #161b22;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            color: #58a6ff;
+        }
+        header p {
+            margin: 5px 0 0 0;
+            font-size: 1.2em;
+            color: #e0f7ff;
+        }
+        nav a {
+            color: #58a6ff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .banner {
+            background-color: #21262d;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 10px 0;
+            border-top: 1px solid #30363d;
+            border-bottom: 1px solid #30363d;
+        }
+        .banner span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll 20s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        section {
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        h2 {
+            color: #58a6ff;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 5px;
+        }
+        a.button {
+            display: inline-block;
+            background-color: #58a6ff;
+            color: #0d1117;
+            padding: 10px 20px;
+            margin-top: 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        a.button:hover {
+            background-color: #1f6feb;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #161b22;
+            border-top: 1px solid #30363d;
+            font-size: 0.9em;
+            color: #8b949e;
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>TogetherBot 公式サイト</h1>
+        <p>みんなで繋ぐ DiscordBOT</p>
+        <nav>
+            <a href="#about">概要</a>
+            <a href="#setup">導入手順</a>
+            <a href="#details">詳細情報</a>
+            <a href="#support">サポート</a>
+        </nav>
+    </header>
 
-<header>
-  <h1>TogetherBot 公式サイト</h1>
-  <nav>
-    <a href="#about">概要</a>
-    <a href="#setup">導入手順</a>
-    <a href="#details">詳細情報</a>
-    <a href="#support">サポート</a>
-  </nav>
-</header>
+    <div class="banner">
+        <span>導入時は管理者ロールを渡してからご利用ください — TogetherBot を使ってサーバーを快適に管理！</span>
+    </div>
 
-<div class="banner">
-  <span>導入時は管理者ロールを渡してからご利用ください！ 🚀 TogetherBotでサーバーのロール認証を簡単に！</span>
-</div>
+    <section id="about">
+        <h2>概要</h2>
+        <p>TogetherBotは、Discordサーバーのロール認証やモデレーションを簡単に行えるボットです。24時間稼働し、サーバー管理をサポートします。</p>
+    </section>
 
-<section id="about">
-  <h2>概要</h2>
-  <p>TogetherBotはDiscordサーバーのロール認証・モデレーション・ユーティリティ機能を備えた公式Botです。  
-  誰でも簡単に導入でき、管理者向けコマンドも豊富に搭載しています。</p>
-</section>
+    <section id="setup">
+        <h2>導入手順</h2>
+        <ol>
+            <li>以下のリンクからBotをサーバーに追加します（管理者権限が必要です）。</li>
+            <li>導入後、管理者ロールをBotに渡してください。</li>
+            <li>コマンド `/verify [ロール名]` で認証パネルを作成。</li>
+            <li>必要に応じて `/auth_setlog [チャンネル]` でログチャンネルを設定。</li>
+        </ol>
+        <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&integration_type=0&scope=bot" class="button">Botをサーバーに追加</a>
+    </section>
 
-<section id="setup">
-  <h2>導入手順</h2>
-  <ol>
-    <li>下のリンクからBotをサーバーに招待します（管理者権限必須）</li>
-    <li>導入後、Botに管理者ロールまたは必要な権限を付与します</li>
-    <li>ログチャンネル設定や認証パネルを作成してご利用ください</li>
-  </ol>
-  <p>
-    <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&integration_type=0&scope=bot" target="_blank">
-      🔗 Botをサーバーに招待
-    </a>
-  </p>
-</section>
+    <section id="details">
+        <h2>詳細情報</h2>
+        <ul>
+            <li>📌 24時間稼働</li>
+            <li>🎭 ロール認証機能</li>
+            <li>🛡️ 管理者コマンド対応（キック、BAN、タイムアウト、メッセージ削除）</li>
+            <li>🎲 サイコロ・コイントス・運勢機能</li>
+            <li>📊 Bot稼働状況確認可能（/botinfo）</li>
+        </ul>
+    </section>
 
-<section id="details">
-  <h2>詳細情報</h2>
-  <table class="info-table">
-    <tr><th>機能</th><th>説明</th></tr>
-    <tr><td>ロール認証</td><td>ボタン1つで指定ロールを付与。サーバールール同意の確認にも最適。</td></tr>
-    <tr><td>モデレーション</td><td>キック・BAN・タイムアウト・メッセージ削除などを管理者コマンドで操作可能。</td></tr>
-    <tr><td>ユーティリティ</td><td>ユーザー情報表示、サーバー情報表示、アバター表示、サイコロ・コイントス・今日の運勢など。</td></tr>
-    <tr><td>稼働情報</td><td>稼働時間、CPU/メモリ使用率、導入サーバー数などを簡単に確認可能。</td></tr>
-  </table>
-</section>
+    <section id="support">
+        <h2>サポート</h2>
+        <p>現在サポートサーバーはありません。制作予定です。しばらくお待ちください。</p>
+    </section>
 
-<section id="support">
-  <h2>サポート</h2>
-  <p>現在、サポートサーバーは準備中です。公開までしばらくお待ちください。</p>
-  <p>ご質問やご要望は、今後設置予定の公式お問い合わせフォームから受け付けます。</p>
-</section>
-
-<footer>
-  <p>© 2025 TogetherBot 公式サイト | All Rights Reserved</p>
-</footer>
-
+    <footer>
+        &copy; 2025 TogetherBot | 公式サイト
+    </footer>
 </body>
 </html>
