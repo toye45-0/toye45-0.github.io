@@ -6,47 +6,38 @@
     <title>TogetherBot 公式サイト</title>
     <style>
         body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: 'Noto Sans JP', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #0d1117;
-            color: #c9d1d9;
+            background-color: #f5f5f5;
+            color: #333;
         }
         header {
-            background-color: #161b22;
+            background-color: #5865F2;
+            color: white;
             padding: 20px;
             text-align: center;
         }
         header h1 {
             margin: 0;
-            color: #58a6ff;
+            font-size: 2em;
         }
-        header p {
+        header h2 {
             margin: 5px 0 0 0;
             font-size: 1.2em;
-            color: #e0f7ff;
+            font-weight: normal;
         }
-        nav a {
-            color: #58a6ff;
-            margin: 0 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .banner {
-            background-color: #21262d;
+        .scroll-banner {
+            background-color: #ffeb3b;
+            color: #333;
+            padding: 10px;
             overflow: hidden;
             white-space: nowrap;
-            padding: 10px 0;
-            border-top: 1px solid #30363d;
-            border-bottom: 1px solid #30363d;
+            box-sizing: border-box;
         }
-        .banner span {
+        .scroll-banner span {
             display: inline-block;
             padding-left: 100%;
-            animation: scroll 20s linear infinite;
+            animation: scroll 15s linear infinite;
         }
         @keyframes scroll {
             0% { transform: translateX(0); }
@@ -55,86 +46,83 @@
         section {
             padding: 40px 20px;
             max-width: 900px;
-            margin: auto;
+            margin: 0 auto;
+            background-color: white;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        h2 {
-            color: #58a6ff;
-            border-bottom: 2px solid #30363d;
-            padding-bottom: 5px;
+        h3 {
+            color: #5865F2;
         }
-        a.button {
-            display: inline-block;
-            background-color: #58a6ff;
-            color: #0d1117;
-            padding: 10px 20px;
-            margin-top: 15px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        a.button:hover {
-            background-color: #1f6feb;
+        ul {
+            list-style: disc inside;
+            line-height: 1.6;
         }
         footer {
             text-align: center;
             padding: 20px;
-            background-color: #161b22;
-            border-top: 1px solid #30363d;
-            font-size: 0.9em;
-            color: #8b949e;
+            background-color: #333;
+            color: white;
+        }
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a.button:hover {
+            background-color: #4752c4;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>TogetherBot 公式サイト</h1>
-        <p>みんなで繋ぐ DiscordBOT</p>
-        <nav>
-            <a href="#about">概要</a>
-            <a href="#setup">導入手順</a>
-            <a href="#details">詳細情報</a>
-            <a href="#support">サポート</a>
-        </nav>
+        <h1>TogetherBot</h1>
+        <h2>みんなで繋ぐDiscordBOT</h2>
     </header>
 
-    <div class="banner">
-        <span>導入時は管理者ロールを渡してからご利用ください — TogetherBot を使ってサーバーを快適に管理！</span>
+    <div class="scroll-banner">
+        <span>導入時は管理者ロールを渡してからご利用ください！</span>
     </div>
 
-    <section id="about">
-        <h2>概要</h2>
-        <p>TogetherBotは、Discordサーバーのロール認証やモデレーションを簡単に行えるボットです。24時間稼働し、サーバー管理をサポートします。</p>
+    <section>
+        <h3>導入はこちら</h3>
+        <p>公式BOTをあなたのサーバーに導入できます。</p>
+        <a class="button" href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&integration_type=0&scope=bot" target="_blank">BOTを追加</a>
     </section>
 
-    <section id="setup">
-        <h2>導入手順</h2>
-        <ol>
-            <li>以下のリンクからBotをサーバーに追加します（管理者権限が必要です）。</li>
-            <li>導入後、管理者ロールをBotに渡してください。</li>
-            <li>コマンド `/verify [ロール名]` で認証パネルを作成。</li>
-            <li>必要に応じて `/auth_setlog [チャンネル]` でログチャンネルを設定。</li>
-        </ol>
-        <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&integration_type=0&scope=bot" class="button">Botをサーバーに追加</a>
-    </section>
-
-    <section id="details">
-        <h2>詳細情報</h2>
+    <section>
+        <h3>今後の追加予定機能</h3>
         <ul>
-            <li>📌 24時間稼働</li>
-            <li>🎭 ロール認証機能</li>
-            <li>🛡️ 管理者コマンド対応（キック、BAN、タイムアウト、メッセージ削除）</li>
-            <li>🎲 サイコロ・コイントス・運勢機能</li>
-            <li>📊 Bot稼働状況確認可能（/botinfo）</li>
+            <li>サポートサーバーの開設予定</li>
+            <li>カスタム通知機能（イベント・配信・ゲーム開始など）</li>
+            <li>より高度なモデレーション（AI自動検知）</li>
+            <li>ゲーム統計連携の拡充（Fortnite/Minecraft/LoLなど）</li>
+            <li>ボイスチャンネル連動機能（自動通知・BGM・ミュート管理）</li>
+            <li>カスタムコマンド・スクリプト機能</li>
+            <li>ダッシュボード実装（Web上で設定・ログ確認）</li>
+            <li>翻訳・多言語対応</li>
         </ul>
     </section>
 
-    <section id="support">
-        <h2>サポート</h2>
-        <p>現在サポートサーバーはありません。制作予定です。しばらくお待ちください。</p>
+    <section>
+        <h3>注意事項</h3>
+        <p>
+            現在、一時的に利用可能な仮ホストサーバーでBOTを運用しています。  
+            そのため、<strong>数分でオフラインになる可能性があります</strong>。  
+            認証ができない場合やBOTがオフラインの場合は、管理者にメンバーロールの付与をお申し付けください。  
+            気づいた係員が順次対応いたします。  
+            <br>
+            ※BOTの管理者は公式管理者になります。
+        </p>
     </section>
 
     <footer>
-        &copy; 2025 TogetherBot | 公式サイト
+        &copy; 2025 TogetherBot | All rights reserved.
     </footer>
 </body>
 </html>
