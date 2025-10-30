@@ -3,179 +3,214 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TOYE 公式サイト</title>
+  <title>TOYE Official</title>
   <style>
-    /* ===== 全体設定 ===== */
     body {
-      font-family: 'Segoe UI', Roboto, sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: #f7f7f7;
-      color: #222;
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      background-color: #0a0a0a;
+      color: #eaeaea;
+      overflow-x: hidden;
     }
 
-    /* ===== ヘッダー ===== */
+    a {
+      text-decoration: none;
+      color: #00bfff;
+      transition: 0.3s;
+    }
+    a:hover { color: #fff; }
+
+    /* Header */
     header {
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: flex; justify-content: space-between; align-items: center;
       padding: 15px 40px;
+      z-index: 1000;
     }
     header h1 {
-      font-size: 1.6em;
-      letter-spacing: 2px;
+      font-size: 1.8em; color: #00bfff; letter-spacing: 2px;
     }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin-left: 20px;
-      font-weight: 500;
-      transition: 0.2s;
-    }
-    nav a:hover {
-      color: #00bfff;
-    }
+    nav a { color: #eaeaea; margin-left: 25px; font-weight: 500; }
+    nav a:hover { color: #00bfff; }
 
-    /* ===== メインビジュアル ===== */
+    /* Hero */
     .hero {
-      background: linear-gradient(to right, #111, #333);
-      color: #fff;
-      height: 60vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      flex-direction: column;
+      background: linear-gradient(135deg, #00111a, #000);
+      height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; color: #fff;
     }
-    .hero h2 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 1.1em;
-      opacity: 0.8;
-    }
+    .hero h2 { font-size: 3em; margin-bottom: 15px; animation: fadeInUp 1s ease-in-out; }
+    .hero p { font-size: 1.2em; opacity: 0.8; animation: fadeInUp 1.5s ease-in-out; }
 
-    /* ===== セクション ===== */
-    section {
-      padding: 60px 10%;
-    }
-    h2 {
-      border-left: 5px solid #000;
-      padding-left: 10px;
-      margin-bottom: 20px;
-      font-size: 1.5em;
-    }
+    /* Section */
+    section { padding: 100px 10%; max-width: 1100px; margin: auto; }
+    h2 { color: #00bfff; border-left: 5px solid #00bfff; padding-left: 10px; margin-bottom: 25px; }
     .content-box {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      padding: 30px;
-      margin-bottom: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 0 15px rgba(0,191,255,0.2);
+      transition: 0.3s;
+    }
+    .content-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(0,191,255,0.4);
     }
 
-    /* ===== YouTube動画埋め込み ===== */
-    .video-embed {
-      text-align: center;
-      margin-top: 20px;
+    /* Video List */
+    .video-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
     }
-    .video-embed iframe {
+    .video-card {
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(0,191,255,0.2);
+    }
+    .video-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(0,191,255,0.4);
+    }
+    .video-card img {
       width: 100%;
-      max-width: 560px;
-      height: 315px;
-      border: none;
-      border-radius: 10px;
+      height: auto;
+      display: block;
+    }
+    .video-info {
+      padding: 15px;
+    }
+    .video-info h3 {
+      margin: 0 0 10px;
+      font-size: 1.1em;
+      color: #00bfff;
+    }
+    .video-info p {
+      font-size: 0.9em;
+      color: #ccc;
+      line-height: 1.5;
     }
 
-    /* ===== フッター ===== */
+    /* Footer */
     footer {
-      background-color: #000;
-      color: #ccc;
+      background: #000;
+      color: #aaa;
       text-align: center;
-      padding: 20px 0;
+      padding: 30px 0;
       font-size: 0.9em;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
-    footer a {
-      color: #00bfff;
-      text-decoration: none;
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    footer a:hover {
-      text-decoration: underline;
+
+    @media (max-width: 768px) {
+      header { flex-direction: column; text-align: center; }
+      nav { margin-top: 10px; }
+      .hero h2 { font-size: 2.2em; }
+      .hero p { font-size: 1em; }
     }
   </style>
 </head>
 
 <body>
-  <!-- ===== ヘッダー ===== -->
+  <!-- Header -->
   <header>
     <h1>TOYE</h1>
     <nav>
-      <a href="#about">ABOUT</a>
-      <a href="#news">NEWS</a>
-      <a href="#video">VIDEO</a>
-      <a href="#contact">CONTACT</a>
+      <a href="#about">About</a>
+      <a href="#news">News</a>
+      <a href="#videos">Videos</a>
+      <a href="#contact">Contact</a>
     </nav>
   </header>
 
-  <!-- ===== メインビジュアル ===== -->
+  <!-- Hero -->
   <div class="hero">
-    <h2>ようこそ TOYE 公式サイトへ</h2>
-    <p>新しい視点で、あなたの日常にインスピレーションを。</p>
+    <h2>TOYE Official Website</h2>
+    <p>次世代ニュース × エンタメを届けるブランド</p>
   </div>
 
-  <!-- ===== About ===== -->
+  <!-- About -->
   <section id="about">
-    <h2>ABOUT</h2>
+    <h2>About</h2>
     <div class="content-box">
       <p>
-        TOYE（トイ）は、最新のトレンドやテクノロジー、エンタメを中心に情報を発信するプロジェクトです。
-        <br>公式YouTubeチャンネルでは、速報ニュースやレビュー、日常をちょっと面白くする企画をお届けしています。
+        TOYE（トイ）は、社会のトレンド・ニュース・テクノロジーをテーマにした
+        解説・速報動画を配信するプロジェクトです。
+        <br><br>
+        子どもでも理解しやすいよう、難しいテーマも簡潔・安全にまとめています。
       </p>
     </div>
   </section>
 
-  <!-- ===== NEWS ===== -->
+  <!-- News -->
   <section id="news">
-    <h2>NEWS</h2>
+    <h2>News</h2>
     <div class="content-box">
       <ul>
-        <li>2025/10/30　公式サイト公開</li>
-        <li>2025/10/29　新動画「退職代行モームリ 家宅捜査」公開</li>
-        <li>2025/10/29　マックのストロー廃止ニュース投稿</li>
+        <li>📅 2025/10/30　TOYE公式サイト公開</li>
+        <li>🎬 2025/10/29　動画「日本マクドナルド：ストロー時代の終わり」公開</li>
       </ul>
     </div>
   </section>
 
-  <!-- ===== YouTube 動画 ===== -->
-  <section id="video">
-    <h2>公式チャンネル</h2>
-    <div class="content-box video-embed">
-      <!-- ↓ここに好きな動画IDを入れる（例: https://www.youtube.com/embed/XXXXXXXX） -->
-      <iframe 
-        src="https://www.youtube.com/embed/?listType=user_uploads&list=UCX5hUx_Zg69EsSiz_5HDH7A" 
-        allowfullscreen
-        title="TOYE Official Channel">
-      </iframe>
-      <p>
-        最新の動画・配信はこちら 👉 
-        <a href="https://www.youtube.com/channel/UCX5hUx_Zg69EsSiz_5HDH7A/" target="_blank">YouTubeチャンネルへ</a>
-      </p>
+  <!-- Videos -->
+  <section id="videos">
+    <h2>Latest Videos</h2>
+    <div class="video-list">
+
+      <div class="video-card">
+        <img src="https://i.ytimg.com/vi/VIDEO_ID1/hqdefault.jpg" alt="日本マクドナルド：ストロー時代の終わり">
+        <div class="video-info">
+          <h3>日本マクドナルド：ストロー時代の終わり</h3>
+          <p>ストローの廃止が始まる。環境への配慮と新しい取り組みを解説。</p>
+          <p>公開日：2025/10/29</p>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <img src="https://i.ytimg.com/vi/VIDEO_ID2/hqdefault.jpg" alt="オンラインゲーム接続障害：クイック解説">
+        <div class="video-info">
+          <h3>オンラインゲーム接続障害：クイック解説</h3>
+          <p>AWS障害により多数のオンラインゲームが停止。原因と影響を解説。</p>
+          <p>公開日：2025/10/20</p>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <img src="https://i.ytimg.com/vi/VIDEO_ID3/hqdefault.jpg" alt="Discordデータ漏洩：知っておくべきこと">
+        <div class="video-info">
+          <h3>Discordデータ漏洩：知っておくべきこと</h3>
+          <p>個人情報流出の可能性は？安全対策を初心者向けに紹介。</p>
+          <p>公開日：2025/10/18</p>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- ===== CONTACT ===== -->
+  <!-- Contact -->
   <section id="contact">
-    <h2>CONTACT</h2>
+    <h2>Contact</h2>
     <div class="content-box">
       <p>
-        ご意見・コラボ依頼・お問い合わせは、公式SNSまたはYouTubeチャンネルの概要欄よりご連絡ください。
+        ご意見・コラボ依頼などは YouTubeチャンネルの概要欄からご連絡ください。
+        <br>または <a href="https://www.youtube.com/channel/UCX5hUx_Zg69EsSiz_5HDH7A/" target="_blank">TOYE公式チャンネル</a> まで。
       </p>
     </div>
   </section>
 
-  <!-- ===== フッター ===== -->
+  <!-- Footer -->
   <footer>
     <p>© 2025 TOYE Official. All Rights Reserved.</p>
     <p>
