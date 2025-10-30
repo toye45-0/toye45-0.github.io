@@ -1,1 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOYE 公式サイト</title>
+  <style>
+    /* ===== 全体設定 ===== */
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+      color: #222;
+    }
 
+    /* ===== ヘッダー ===== */
+    header {
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+    }
+    header h1 {
+      font-size: 1.6em;
+      letter-spacing: 2px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+    nav a:hover {
+      color: #00bfff;
+    }
+
+    /* ===== メインビジュアル ===== */
+    .hero {
+      background: linear-gradient(to right, #111, #333);
+      color: #fff;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+    }
+    .hero h2 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 1.1em;
+      opacity: 0.8;
+    }
+
+    /* ===== セクション ===== */
+    section {
+      padding: 60px 10%;
+    }
+    h2 {
+      border-left: 5px solid #000;
+      padding-left: 10px;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+    .content-box {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+
+    /* ===== YouTube動画埋め込み ===== */
+    .video-embed {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .video-embed iframe {
+      width: 100%;
+      max-width: 560px;
+      height: 315px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    /* ===== フッター ===== */
+    footer {
+      background-color: #000;
+      color: #ccc;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.9em;
+    }
+    footer a {
+      color: #00bfff;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===== ヘッダー ===== -->
+  <header>
+    <h1>TOYE</h1>
+    <nav>
+      <a href="#about">ABOUT</a>
+      <a href="#news">NEWS</a>
+      <a href="#video">VIDEO</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+  </header>
+
+  <!-- ===== メインビジュアル ===== -->
+  <div class="hero">
+    <h2>ようこそ TOYE 公式サイトへ</h2>
+    <p>新しい視点で、あなたの日常にインスピレーションを。</p>
+  </div>
+
+  <!-- ===== About ===== -->
+  <section id="about">
+    <h2>ABOUT</h2>
+    <div class="content-box">
+      <p>
+        TOYE（トイ）は、最新のトレンドやテクノロジー、エンタメを中心に情報を発信するプロジェクトです。
+        <br>公式YouTubeチャンネルでは、速報ニュースやレビュー、日常をちょっと面白くする企画をお届けしています。
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== NEWS ===== -->
+  <section id="news">
+    <h2>NEWS</h2>
+    <div class="content-box">
+      <ul>
+        <li>2025/10/30　公式サイト公開</li>
+        <li>2025/10/29　新動画「退職代行モームリ 家宅捜査」公開</li>
+        <li>2025/10/29　マックのストロー廃止ニュース投稿</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== YouTube 動画 ===== -->
+  <section id="video">
+    <h2>公式チャンネル</h2>
+    <div class="content-box video-embed">
+      <!-- ↓ここに好きな動画IDを入れる（例: https://www.youtube.com/embed/XXXXXXXX） -->
+      <iframe 
+        src="https://www.youtube.com/embed/?listType=user_uploads&list=UCX5hUx_Zg69EsSiz_5HDH7A" 
+        allowfullscreen
+        title="TOYE Official Channel">
+      </iframe>
+      <p>
+        最新の動画・配信はこちら 👉 
+        <a href="https://www.youtube.com/channel/UCX5hUx_Zg69EsSiz_5HDH7A/" target="_blank">YouTubeチャンネルへ</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact">
+    <h2>CONTACT</h2>
+    <div class="content-box">
+      <p>
+        ご意見・コラボ依頼・お問い合わせは、公式SNSまたはYouTubeチャンネルの概要欄よりご連絡ください。
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== フッター ===== -->
+  <footer>
+    <p>© 2025 TOYE Official. All Rights Reserved.</p>
+    <p>
+      <a href="https://www.youtube.com/channel/UCX5hUx_Zg69EsSiz_5HDH7A/" target="_blank">YouTube</a> |
+      <a href="#">X（旧Twitter）</a> |
+      <a href="#">Instagram</a>
+    </p>
+  </footer>
+</body>
+</html>
