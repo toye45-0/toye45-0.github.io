@@ -193,9 +193,62 @@
             line-height: 1.6;
         }
 
+        .commands {
+            padding: 80px 0;
+        }
+
+        .commands h2 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 60px;
+        }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .command-section {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .command-section h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #feca57;
+        }
+
+        .command-section h4 {
+            font-size: 20px;
+            margin: 20px 0 10px;
+            color: #ff6b6b;
+        }
+
+        .command-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border-left: 3px solid #feca57;
+        }
+
+        .command-item code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            color: #feca57;
+        }
+
         .stats {
             padding: 80px 0;
             text-align: center;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .stats-grid {
@@ -214,6 +267,57 @@
         .stat-item p {
             font-size: 18px;
             opacity: 0.9;
+        }
+
+        .warning {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+
+        .warning-content {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #fff;
+            text-align: center;
+        }
+
+        .warning-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .warning h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .warning-text {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .official-id {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: inline-block;
+        }
+
+        .official-id code {
+            font-size: 24px;
+            color: #feca57;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
         }
 
         footer {
@@ -240,6 +344,10 @@
             .nav-links {
                 display: none;
             }
+
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -251,8 +359,9 @@
                 <span>TogetherBot</span>
             </div>
             <ul class="nav-links">
+                <li><a href="#warning">⚠️ 重要</a></li>
                 <li><a href="#features">機能</a></li>
-                <li><a href="#stats">統計</a></li>
+                <li><a href="#commands">コマンド</a></li>
                 <li><a href="#invite">招待</a></li>
             </ul>
         </nav>
@@ -261,10 +370,34 @@
     <section class="hero">
         <div class="container">
             <h1>TogetherBot</h1>
-            <p class="subtitle">Discordサーバーをもっと楽しく、もっと便利に</p>
+            <p class="subtitle">ロール認証とモデレーションの決定版Bot</p>
             <div class="cta-buttons">
-                <a href="#" class="btn btn-primary">Botを招待する</a>
-                <a href="#" class="btn btn-secondary">サポートサーバー</a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&integration_type=0&scope=bot" class="btn btn-primary" target="_blank">Botを招待する</a>
+                <a href="#commands" class="btn btn-secondary">コマンドを見る</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="warning" id="warning">
+        <div class="container">
+            <div class="warning-content">
+                <div class="warning-icon">⚠️</div>
+                <h2>【重要なお知らせ】偽物Botにご注意ください</h2>
+                <p class="warning-text">
+                    現在、TogetherBotを装った偽物のBotが出現しております。<br>
+                    <strong>偽物Botは「乗っ取り」などと宣言していますが、公式TogetherBotは一切そのような行為を行っておりません。</strong>
+                </p>
+                <p class="warning-text">
+                    必ず下記の公式Bot IDを確認してから招待してください。
+                </p>
+                <div class="official-id">
+                    <p style="margin-bottom: 10px; font-size: 18px;">公式Bot ID</p>
+                    <code>1418365961043447889</code>
+                </div>
+                <p class="warning-text" style="margin-top: 30px; font-size: 18px;">
+                    公式招待リンク以外からの招待は絶対にお控えください。<br>
+                    このページの「Botを招待する」ボタンのみが公式リンクです。
+                </p>
             </div>
         </div>
     </section>
@@ -274,57 +407,133 @@
             <h2>主な機能</h2>
             <div class="feature-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🎮</div>
-                    <h3>楽しいゲーム</h3>
-                    <p>メンバー同士で楽しめる多彩なミニゲームでコミュニティを活性化</p>
+                    <div class="feature-icon">✅</div>
+                    <h3>ロール認証</h3>
+                    <p>簡単な認証パネルでサーバーメンバーにロールを付与。セキュリティとアクセス管理を簡素化</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🛡️</div>
                     <h3>モデレーション</h3>
-                    <p>自動モデレーション機能でサーバーを安全に保ち、管理を効率化</p>
+                    <p>キック、BAN、タイムアウトなど、サーバー管理に必要な機能を網羅</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎵</div>
-                    <p>高音質な音楽再生機能で、みんなで一緒に音楽を楽しもう</p>
+                    <div class="feature-icon">📝</div>
+                    <h3>ログ機能</h3>
+                    <p>認証ログやモデレーションアクションを指定チャンネルに記録</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>エンタメコマンド</h3>
+                    <p>サイコロ、コイントス、運勢占いでコミュニティを盛り上げる</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📊</div>
-                    <h3>統計機能</h3>
-                    <p>サーバーの活動状況を可視化し、成長を追跡できます</p>
+                    <h3>情報表示</h3>
+                    <p>ユーザー情報、サーバー情報、アバターなどを簡単に確認</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚙️</div>
-                    <h3>カスタマイズ</h3>
-                    <p>サーバーに合わせて設定をカスタマイズ可能</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <h3>便利なコマンド</h3>
-                    <p>直感的で使いやすいコマンドで誰でも簡単に操作できます</p>
+                    <h3>柔軟な設定</h3>
+                    <p>ステータスメッセージやロール管理を自由にカスタマイズ可能</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="stats" id="stats">
+    <section class="commands" id="commands">
         <div class="container">
-            <h2>TogetherBotの実績</h2>
+            <h2>コマンド一覧</h2>
+            <div class="commands-grid">
+                <div class="command-section">
+                    <h3>👥 全員が使えるコマンド</h3>
+                    <div class="command-item">
+                        <code>/help</code> - ヘルプを表示
+                    </div>
+                    <div class="command-item">
+                        <code>/botinfo</code> - ボット詳細情報
+                    </div>
+                    <div class="command-item">
+                        <code>/userinfo</code> - ユーザー情報を表示
+                    </div>
+                    <div class="command-item">
+                        <code>/serverinfo</code> - サーバー情報を表示
+                    </div>
+                    <div class="command-item">
+                        <code>/avatar</code> - アバターを表示
+                    </div>
+                    <div class="command-item">
+                        <code>/dice</code> - サイコロを振る
+                    </div>
+                    <div class="command-item">
+                        <code>/coinflip</code> - コイントス
+                    </div>
+                    <div class="command-item">
+                        <code>/fortune</code> - 今日の運勢
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3>👑 管理者コマンド</h3>
+                    
+                    <h4>認証機能</h4>
+                    <div class="command-item">
+                        <code>/verify [ロール]</code> - 認証パネル作成
+                    </div>
+                    <div class="command-item">
+                        <code>/auth_setlog [チャンネル]</code> - ログチャンネル設定
+                    </div>
+                    <div class="command-item">
+                        <code>/setstatus [message/clear]</code> - ステータス設定
+                    </div>
+
+                    <h4>モデレーション</h4>
+                    <div class="command-item">
+                        <code>/kick [メンバー] [理由]</code> - メンバーをキック
+                    </div>
+                    <div class="command-item">
+                        <code>/ban [メンバー] [理由]</code> - メンバーをBAN
+                    </div>
+                    <div class="command-item">
+                        <code>/timeout [メンバー] [分] [理由]</code> - タイムアウト
+                    </div>
+                    <div class="command-item">
+                        <code>/clear [数]</code> - メッセージ削除
+                    </div>
+                    <div class="command-item">
+                        <code>/cleardm [ユーザー] [数]</code> - DMメッセージ削除
+                    </div>
+
+                    <h4>ロール管理</h4>
+                    <div class="command-item">
+                        <code>/addrole [メンバー] [ロール]</code> - ロール付与
+                    </div>
+                    <div class="command-item">
+                        <code>/removerole [メンバー] [ロール]</code> - ロール削除
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <h2>TogetherBotの特徴</h2>
             <div class="stats-grid">
                 <div class="stat-item">
-                    <h3>10,000+</h3>
-                    <p>サーバー数</p>
+                    <h3>高速</h3>
+                    <p>瞬時に応答</p>
                 </div>
                 <div class="stat-item">
-                    <h3>500,000+</h3>
-                    <p>ユーザー数</p>
+                    <h3>安定</h3>
+                    <p>99.9%稼働率</p>
                 </div>
                 <div class="stat-item">
-                    <h3>99.9%</h3>
-                    <p>稼働率</p>
+                    <h3>簡単</h3>
+                    <p>直感的な操作</p>
                 </div>
                 <div class="stat-item">
-                    <h3>24/7</h3>
-                    <p>サポート</p>
+                    <h3>無料</h3>
+                    <p>完全無料で利用可能</p>
                 </div>
             </div>
         </div>
@@ -333,9 +542,9 @@
     <section class="hero" id="invite">
         <div class="container">
             <h2 style="margin-bottom: 20px;">今すぐ始めよう</h2>
-            <p class="subtitle">TogetherBotをあなたのサーバーに招待して、<br>コミュニティをより良いものに</p>
+            <p class="subtitle">TogetherBotをあなたのサーバーに招待して、<br>サーバー管理を簡単に</p>
             <div class="cta-buttons">
-                <a href="#" class="btn btn-primary">Botを招待する</a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1418365961043447889&permissions=8&integration_type=0&scope=bot" class="btn btn-primary" target="_blank">Botを招待する</a>
             </div>
         </div>
     </section>
